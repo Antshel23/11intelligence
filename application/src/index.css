@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#04122D] text-gray-900 min-h-screen font-sans antialiased;
+  }
+
+  h1 {
+    @apply text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-[#EEEEEE]/90 backdrop-blur-sm rounded-xl shadow-lg p-6 
+           border border-white/10 hover:shadow-xl transition-shadow duration-300;
+  }
+
+  .metric-card {
+    @apply bg-gradient-to-br from-white/95 to-white/75 backdrop-blur-md 
+           rounded-xl shadow-lg p-6 border border-white/20;
+  }
+
+  .stat-value {
+    @apply text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 
+           bg-clip-text text-transparent;
+  }
+
+  .stat-label {
+    @apply text-sm font-medium text-gray-500 uppercase tracking-wider;
+  }
+}
+
+@layer utilities {
+  .glass-effect {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+}
