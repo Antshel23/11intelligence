@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { BarChart } from './components/BarChart'
 import { processData, getValue, getPercentileRank } from './utils/dataProcessor'
 import type { TeamStats } from './utils/dataProcessor'
-import { Sidebar } from './components/Sidebar'
 import { Header } from './components/Header'
+import { TeamSelector } from './components/TeamSelector'
 
 function App() {
   const [data, setData] = useState<TeamStats[]>([])
   const [selectedTeam, setSelectedTeam] = useState<string>('')
+  const [selectedTab, setSelectedTab] = useState('opposition')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -68,7 +69,7 @@ function App() {
           name: "SOT %", 
           value: getValue(selectedTeamData, 'SOT %'),
           percentile: getPercentileRank(selectedTeamData, 'SOT %')
-        },
+        }
       ] : []
     },
     {
@@ -89,11 +90,6 @@ function App() {
           name: "Pass Accuracy", 
           value: getValue(selectedTeamData, 'Pass accuracy %'),
           percentile: getPercentileRank(selectedTeamData, 'Pass accuracy %')
-        },
-        {
-          name: "Passes per 90",
-          value: getValue(selectedTeamData, 'Total passes'),
-          percentile: getPercentileRank(selectedTeamData, 'Total passes')
         }
       ] : []
     }
@@ -102,87 +98,77 @@ function App() {
   const renderContent = () => (
     <div className="min-h-screen bg-[#04122D]">
       <Header 
-        selectedTeam={selectedTeam}
-        onTeamChange={setSelectedTeam}
-        teams={data.map(d => d.team)}
+        selectedTab={selectedTab}
+        onTabChange={setSelectedTab}
       />
-      <Sidebar />
-      <main className="ml-48 pt-20 px-8 pb-8">
-        <AnimatePresence>
-          {selectedTeam ? (
-            <motion.div 
-              className="space-y-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <div className="grid gap-8 grid-cols-1">
-                {sections.map(section => (
-                  <motion.section
-                    key={section.title}
-                    className="bg-white/5 backdrop-blur-sm rounded-lg p-6
-                             border border-white/10 hover:border-white/20
-                             transition-colors duration-200"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <h2 className="text-xl font-medium text-white/90 mb-6">
-                      {section.title}
-                    </h2>
-                    <BarChart
-                      data={section.metrics}
-                      color={section.color}
-                      height={section.metrics.length * 60 + 40}
-                    />
-                  </motion.section>
-                ))}
+      <main className="pt-20 px-8 pb-8">
+        <div className="flex flex-col space-y-6">
+          {/* Title and selector container */}
+          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4
+                      border border-white/10">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 text-center">
+                <h1 className="text-xl font-medium text-white/90">
+                  Opposition Summary: {selectedTeam || 'Select a team'}
+                </h1>
               </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex items-center justify-center h-[60vh]"
-            >
-              <h2 className="text-lg text-white/60">
-                Select a team to view analytics
-              </h2>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <TeamSelector 
+                selectedTeam={selectedTeam}
+                onTeamChange={setSelectedTeam}
+                teams={data.map(d => d.team)}
+              />
+            </div>
+          </div>
+  
+          {/* Content sections */}
+          <AnimatePresence>
+            {selectedTeam ? (
+              <motion.div 
+                className="space-y-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <div className="grid gap-8 grid-cols-1">
+                  {sections.map(section => (
+                    <motion.section
+                      key={section.title}
+                      className="bg-white/5 backdrop-blur-sm rounded-lg p-6
+                               border border-white/10 hover:border-white/20
+                               transition-colors duration-200"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <h2 className="text-xl font-medium text-white/90 mb-6">
+                        {section.title}
+                      </h2>
+                      <BarChart
+                        data={section.metrics}
+                        color={section.color}
+                        height={section.metrics.length * 60 + 40}
+                      />
+                    </motion.section>
+                  ))}
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center justify-center h-[60vh]"
+              >
+                <h2 className="text-lg text-white/60">
+                  Select a team to view analytics
+                </h2>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </main>
     </div>
   )
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#04122D] flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-lg text-white/80"
-        >
-          Loading data...
-        </motion.div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-[#04122D] flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-lg text-red-400"
-        >
-          {error}
-        </motion.div>
-      </div>
-    )
-  }
 
   return renderContent()
 }

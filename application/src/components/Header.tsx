@@ -1,12 +1,18 @@
 import { motion } from 'framer-motion'
+import { RiTeamLine, RiFootballLine, RiUserLine } from 'react-icons/ri'
 
 interface HeaderProps {
-  selectedTeam: string
-  onTeamChange: (team: string) => void
-  teams: string[]
+  selectedTab: string;
+  onTabChange: (tab: string) => void;
 }
 
-export const Header = ({ selectedTeam, onTeamChange, teams }: HeaderProps) => {
+export const Header = ({ selectedTab, onTabChange }: HeaderProps) => {
+  const navItems = [
+    { icon: RiTeamLine, label: 'Opposition', id: 'opposition' },
+    { icon: RiFootballLine, label: 'Match', id: 'match' },
+    { icon: RiUserLine, label: 'Player', id: 'player' },
+  ]
+
   return (
     <motion.header 
       initial={{ opacity: 0 }}
@@ -14,29 +20,30 @@ export const Header = ({ selectedTeam, onTeamChange, teams }: HeaderProps) => {
       className="h-14 bg-[#EEEEEE] fixed top-0 right-0 left-0 z-10 
                  flex items-center justify-between px-6 border-b border-gray-200"
     >
-      <img src="/image.png" alt="Company Logo" className="h-14 w-auto" />
-      <div>
-        <select 
-          value={selectedTeam}
-          onChange={(e) => onTeamChange(e.target.value)}
-          className="bg-white border border-gray-300 rounded-lg px-3 py-1.5
-                   text-gray-800 text-sm font-medium cursor-pointer
-                   hover:border-blue-400 focus:border-blue-400 focus:outline-none
-                   focus:ring-2 focus:ring-blue-100
-                   transition-all duration-200"
-        >
-          <option value="" className="text-gray-500">Select a team</option>
-          {teams.map(team => (
-            <option 
-              key={team} 
-              value={team} 
-              className="text-gray-800"
-            >
-              {team}
-            </option>
-          ))}
-        </select>
+      <div className="flex items-center">
+        <img src="/image.png" alt="Company Logo" className="h-14 w-auto" />
       </div>
+
+      {/* Navigation Items moved to right */}
+      <nav className="flex items-center space-x-2">
+        {navItems.map((item, index) => (
+          <motion.button
+            key={item.id}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            onClick={() => onTabChange(item.id)}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg
+                       text-sm font-medium transition-all duration-200
+                       ${selectedTab === item.id
+                         ? 'bg-blue-50 text-blue-600' 
+                         : 'text-gray-600 hover:bg-gray-100'}`}
+          >
+            <item.icon className={`w-5 h-5 ${selectedTab === item.id ? 'text-blue-600' : 'text-gray-500'}`} />
+            <span>{item.label}</span>
+          </motion.button>
+        ))}
+      </nav>
     </motion.header>
   )
 }
