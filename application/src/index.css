@@ -2,43 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
+.chart-container {
+  @apply bg-gradient-to-br from-white/[0.03] to-transparent
+         backdrop-blur-lg rounded-xl
+         border border-white/[0.05]
+         shadow-[0_4px_24px_rgba(0,0,0,0.1)];
+}
+
+.chart-container:hover {
+  @apply border-white/[0.08]
+         shadow-[0_8px_32px_rgba(0,0,0,0.15)];
+}
+
 @layer base {
   body {
     @apply bg-[#04122D] text-gray-900 min-h-screen font-sans antialiased;
+    background-image: radial-gradient(circle at top right, rgba(25, 45, 100, 0.15), transparent 60%),
+                     radial-gradient(circle at bottom left, rgba(13, 38, 76, 0.15), transparent 60%);
   }
 
   h1 {
-    @apply text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent;
+    @apply text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent
+           tracking-tight leading-none;
   }
 
   h2 {
-    @apply text-2xl font-semibold;
+    @apply text-2xl font-semibold tracking-tight
+           relative pb-2 mb-6;
+  }
+
+  h2::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-12 h-0.5 bg-white/10;
   }
 }
 
 @layer components {
   .card {
-    @apply bg-[#EEEEEE]/90 backdrop-blur-sm rounded-xl shadow-lg p-6 
-           border border-white/10 hover:shadow-xl transition-shadow duration-300;
+    @apply bg-gradient-to-br from-white/[0.03] to-white/[0.01]
+           backdrop-blur-xl rounded-xl
+           border border-white/[0.05] hover:border-white/[0.08]
+           shadow-[0_8px_16px_rgba(0,0,0,0.2)]
+           hover:shadow-[0_12px_24px_rgba(0,0,0,0.3)]
+           transition-all duration-300 ease-out;
   }
 
   .metric-card {
-    @apply bg-gradient-to-br from-white/95 to-white/75 backdrop-blur-md 
-           rounded-xl shadow-lg p-6 border border-white/20;
+    @apply bg-gradient-to-br from-white/[0.05] to-transparent
+           backdrop-blur-xl rounded-xl p-6
+           border border-white/[0.08]
+           shadow-[0_4px_12px_rgba(0,0,0,0.1)]
+           hover:shadow-[0_8px_16px_rgba(0,0,0,0.2)]
+           transition-all duration-300;
   }
 
   .stat-value {
-    @apply text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 
-           bg-clip-text text-transparent;
+    @apply text-4xl font-bold 
+           bg-gradient-to-r from-white to-white/80
+           bg-clip-text text-transparent
+           tracking-tight leading-none;
   }
 
   .stat-label {
-    @apply text-sm font-medium text-gray-500 uppercase tracking-wider;
+    @apply text-sm font-medium 
+           text-white/60 uppercase 
+           tracking-wider;
+  }
+
+  .chart-container {
+    @apply p-6 rounded-xl
+           bg-gradient-to-br from-white/[0.03] to-transparent
+           border border-white/[0.05]
+           shadow-[0_4px_24px_rgba(0,0,0,0.1)]
+           backdrop-blur-xl;
   }
 }
 
 @layer utilities {
   .glass-effect {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
+    @apply bg-gradient-to-br from-white/[0.07] to-white/[0.03]
+           backdrop-blur-xl
+           border border-white/[0.05]
+           shadow-[0_8px_32px_rgba(0,0,0,0.12)];
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-300 ease-out
+           hover:-translate-y-0.5;
+  }
+
+  .subtle-grid {
+    background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                     linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 }

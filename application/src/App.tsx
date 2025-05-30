@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BarChart } from './components/BarChart'
-import { processData } from './utils/dataProcessor'
+import { processData, getValue, getPercentileRank } from './utils/dataProcessor'
 import type { TeamStats } from './utils/dataProcessor'
 import { Sidebar } from './components/Sidebar'
 import { Header } from './components/Header'
@@ -17,7 +17,6 @@ function App() {
       try {
         setIsLoading(true)
         const teamData = await processData()
-        console.log('Loaded teams:', teamData.map(d => d.team))
         setData(teamData)
         if (teamData.length > 0) {
           setSelectedTeam(teamData[0].team)
@@ -36,30 +35,66 @@ function App() {
 
   const sections = [
     {
-      title: "On the Ball",
+      title: "Attacking",
       color: "#2563eb",
       metrics: selectedTeamData ? [
-        { name: "Possession", value: selectedTeamData.possession },
-        { name: "Progressive Pass %", value: selectedTeamData.progressivePassSuccess },
-        { name: "Final Third Pass %", value: selectedTeamData.finalThirdPassSuccess }
+        { 
+          name: "Goals", 
+          value: getValue(selectedTeamData, 'Goals'),
+          percentile: getPercentileRank(selectedTeamData, 'Goals')
+        },
+        { 
+          name: "Expected Goals", 
+          value: getValue(selectedTeamData, 'xG'),
+          percentile: getPercentileRank(selectedTeamData, 'xG')
+        },
+        { 
+          name: "Total Shots", 
+          value: getValue(selectedTeamData, 'Total shots'),
+          percentile: getPercentileRank(selectedTeamData, 'Total shots')
+        }
       ] : []
     },
     {
-      title: "Against the Ball",
+      title: "Shooting Efficiency",
       color: "#dc2626",
       metrics: selectedTeamData ? [
-        { name: "Opp. Progressive Pass %", value: selectedTeamData.opponentProgressivePassSuccess },
-        { name: "Opp. Final Third Pass %", value: selectedTeamData.opponentFinalThirdPassSuccess },
-        { name: "Aerial Duel Success %", value: selectedTeamData.aerialDuelSuccess },
-        { name: "PPDA", value: selectedTeamData.ppda }
+        { 
+          name: "Shots on Target", 
+          value: getValue(selectedTeamData, 'Shots on target'),
+          percentile: getPercentileRank(selectedTeamData, 'Shots on target')
+        },
+        { 
+          name: "SOT %", 
+          value: getValue(selectedTeamData, 'SOT %'),
+          percentile: getPercentileRank(selectedTeamData, 'SOT %')
+        },
       ] : []
     },
     {
-      title: "Summary",
+      title: "Passing",
       color: "#ca8a04",
       metrics: selectedTeamData ? [
-        { name: "xG", value: selectedTeamData.xG },
-        { name: "Opponent xG", value: selectedTeamData.opponentXG }
+        { 
+          name: "Total Passes", 
+          value: getValue(selectedTeamData, 'Total passes'),
+          percentile: getPercentileRank(selectedTeamData, 'Total passes')
+        },
+        { 
+          name: "Accurate Passes", 
+          value: getValue(selectedTeamData, 'Accurate passes'),
+          percentile: getPercentileRank(selectedTeamData, 'Accurate passes')
+        },
+        { 
+          name: "Pass Accuracy", 
+          value: getValue(selectedTeamData, 'Pass accuracy %'),
+          percentile: getPercentileRank(selectedTeamData, 'Pass accuracy %')
+        },
+        {
+          name: "Passes per 90",
+          value: getValue(selectedTeamData, 'Total passes'),
+          percentile: getPercentileRank(selectedTeamData, 'Total passes')
+        }
       ] : []
     }
   ]
@@ -72,33 +107,33 @@ function App() {
         teams={data.map(d => d.team)}
       />
       <Sidebar />
-      <main className="ml-48 pt-20 px-6 pb-8">
+      <main className="ml-48 pt-20 px-8 pb-8">
         <AnimatePresence>
           {selectedTeam ? (
             <motion.div 
-              className="space-y-6"
+              className="space-y-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-8 grid-cols-1">
                 {sections.map(section => (
                   <motion.section
                     key={section.title}
-                    className="bg-white/5 backdrop-blur-sm rounded-lg p-5
+                    className="bg-white/5 backdrop-blur-sm rounded-lg p-6
                              border border-white/10 hover:border-white/20
                              transition-colors duration-200"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <h2 className="text-lg font-medium text-white/90 mb-4">
+                    <h2 className="text-xl font-medium text-white/90 mb-6">
                       {section.title}
                     </h2>
                     <BarChart
                       data={section.metrics}
                       color={section.color}
-                      height={section.metrics.length * 50 + 40}
+                      height={section.metrics.length * 60 + 40}
                     />
                   </motion.section>
                 ))}

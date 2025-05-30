@@ -1,59 +1,68 @@
-import { csvParse } from 'd3'
-import type { DSVRowString } from 'd3'
-import oppoData from './oppo_data.csv'
+export interface StatValue {
+  value: number;
+  percentileRank: number;
+}
 
 export interface TeamStats {
-  team: string
-  possession: number
-  progressivePassSuccess: number
-  finalThirdPassSuccess: number
-  opponentProgressivePassSuccess: number
-  opponentFinalThirdPassSuccess: number
-  aerialDuelSuccess: number
-  ppda: number
-  xG: number
-  opponentXG: number
+  team: string;
+  season: string;
+  stats: {
+    Goals: StatValue;
+    xG: StatValue;
+    'Total shots': StatValue;
+    'Shots on target': StatValue;
+    'SOT %': StatValue;
+    'Total passes': StatValue;
+    'Accurate passes': StatValue;
+    'Pass accuracy %': StatValue;
+    [key: string]: StatValue;
+  }
 }
 
 export const processData = async (): Promise<TeamStats[]> => {
   try {
-    const rawData = await fetch(oppoData)
-      .then(response => response.text())
-      .then(v => csvParse(v))
+    // Update path to fetch from utils folder
+    const response = await fetch('/src/utils/oppo_data.json');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     
-    if (!rawData || !rawData.length) {
-      throw new Error('No data found in CSV')
+    const data: TeamStats[] = await response.json();
+    
+    if (!data || !data.length) {
+      throw new Error('No data found in JSON');
     }
 
-    // Group data by team
-    const teamMap = new Map<string, TeamStats>()
+    // Sort teams alphabetically
+    const processedData = data.sort((a, b) => a.team.localeCompare(b.team));
     
-    rawData.forEach((row: DSVRowString) => {
-      if (!teamMap.has(row.Team)) {
-        teamMap.set(row.Team, {
-          team: row.Team,
-          possession: parseFloat(row.Possession) || 0,
-          progressivePassSuccess: parseFloat(row['Progressive pass success %']) || 0,
-          finalThirdPassSuccess: parseFloat(row['Final third pass success %']) || 0,
-          opponentProgressivePassSuccess: parseFloat(row['Oppo Progressive pass success %']) || 0,
-          opponentFinalThirdPassSuccess: parseFloat(row['Oppo Final third pass success %']) || 0,
-          aerialDuelSuccess: parseFloat(row['Aerial duel success %']) || 0,
-          ppda: parseFloat(row.PPDA) || 0,
-          xG: parseFloat(row.xG) || 0,
-          opponentXG: parseFloat(row['Oppo xG']) || 0
-        })
+    // Validate data structure
+    processedData.forEach(team => {
+      if (!team.team || !team.season || !team.stats) {
+        throw new Error(`Invalid team data structure for team: ${team.team}`);
       }
-    })
+    });
 
-    // Convert map to array and sort by team name
-    const processedData = Array.from(teamMap.values())
-      .sort((a, b) => a.team.localeCompare(b.team))
-    
-    console.log('Processed teams:', processedData.map(d => d.team)) // Debug log
-    
-    return processedData
+    return processedData;
   } catch (error) {
-    console.error('Error processing data:', error)
-    throw new Error('Failed to process team data')
+    console.error('Error processing data:', error);
+    throw new Error('Failed to process team data');
   }
+}
+
+// Helper functions
+export const getValue = (team: TeamStats, statKey: string): number => {
+  return team.stats[statKey]?.value ?? 0;
+}
+
+export const getPercentileRank = (team: TeamStats, statKey: string): number => {
+  return team.stats[statKey]?.percentileRank ?? 0;
+}
+
+export const getStatKeys = (team: TeamStats): string[] => {
+  return Object.keys(team.stats);
+}
+
+export const hasStat = (team: TeamStats, statKey: string): boolean => {
+  return statKey in team.stats;
 }

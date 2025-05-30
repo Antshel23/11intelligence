@@ -3,5 +3,10 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  assetsInclude: ['**/*.csv']
+  assetsInclude: ['**/*.json'], // Add this line
+  server: {
+    watch: {
+      usePolling: true,
+    },
+  },
 })
