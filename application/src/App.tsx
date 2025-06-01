@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BarChart } from './components/BarChart'
+import { GaugeChart } from './components/GaugeChart' // Ensure GaugeChart.tsx exists in the components folder
 import { processData, getValue, getPercentileRank } from './utils/dataProcessor'
 import type { TeamStats } from './utils/dataProcessor'
 import { Header } from './components/Header'
@@ -34,143 +35,211 @@ function App() {
 
   const selectedTeamData = data.find(d => d.team === selectedTeam)
 
-  const sections = [
-    {
-      title: "Attacking",
-      color: "#2563eb",
+  const sections = {
+    buildUp: {
+      title: "Build Up",
+      color: "#7406B5",
       metrics: selectedTeamData ? [
         { 
-          name: "Goals", 
-          value: getValue(selectedTeamData, 'Goals'),
-          percentile: getPercentileRank(selectedTeamData, 'Goals')
+          name: "Long Ball", 
+          value: getValue(selectedTeamData, 'Long pass %'),
+          percentile: getPercentileRank(selectedTeamData, 'Long pass %')
         },
+        { 
+          name: "Progressive Passes", 
+          value: getValue(selectedTeamData, 'Total progressive passes'),
+          percentile: getPercentileRank(selectedTeamData, 'Total progressive passes')
+        },
+        { 
+          name: "Final Third Entries", 
+          value: getValue(selectedTeamData, 'Total final third passes'),
+          percentile: getPercentileRank(selectedTeamData, 'Total final third passes')
+        },
+        { 
+          name: "Possession", 
+          value: getValue(selectedTeamData, 'Possession'),
+          percentile: getPercentileRank(selectedTeamData, 'Possession')
+        }
+      ] : []
+    },
+    chanceCreation: {
+      title: "Chance Creation",
+      color: "#D50033",
+      metrics: selectedTeamData ? [
         { 
           name: "Expected Goals", 
           value: getValue(selectedTeamData, 'xG'),
           percentile: getPercentileRank(selectedTeamData, 'xG')
         },
         { 
-          name: "Total Shots", 
-          value: getValue(selectedTeamData, 'Total shots'),
-          percentile: getPercentileRank(selectedTeamData, 'Total shots')
+          name: "Box entry via cross", 
+          value: getValue(selectedTeamData, 'Box entry via cross'),
+          percentile: getPercentileRank(selectedTeamData, 'Box entry via cross')
+        },
+        { 
+          name: "Box entry via run", 
+          value: getValue(selectedTeamData, 'Box entry via run'),
+          percentile: getPercentileRank(selectedTeamData, 'Box entry via run')
+        },
+        { 
+          name: "Goals", 
+          value: getValue(selectedTeamData, 'Goals'),
+          percentile: getPercentileRank(selectedTeamData, 'Goals')
         }
       ] : []
     },
-    {
-      title: "Shooting Efficiency",
-      color: "#dc2626",
+    press: {
+      title: "Press",
+      color: "#1C79D1",
       metrics: selectedTeamData ? [
         { 
-          name: "Shots on Target", 
-          value: getValue(selectedTeamData, 'Shots on target'),
-          percentile: getPercentileRank(selectedTeamData, 'Shots on target')
+          name: "Ball Recoveries", 
+          value: getValue(selectedTeamData, 'Ball recoveries'),
+          percentile: getPercentileRank(selectedTeamData, 'Ball recoveries')
         },
         { 
-          name: "SOT %", 
-          value: getValue(selectedTeamData, 'SOT %'),
-          percentile: getPercentileRank(selectedTeamData, 'SOT %')
+          name: "High Turnovers", 
+          value: getValue(selectedTeamData, 'High turnovers'),
+          percentile: getPercentileRank(selectedTeamData, 'High turnovers')
+        },
+        { 
+          name: "Pressure Success", 
+          value: getValue(selectedTeamData, 'Pressure success %'),
+          percentile: getPercentileRank(selectedTeamData, 'Pressure success %')
+        },
+        { 
+          name: "PPDA", 
+          value: getValue(selectedTeamData, 'PPDA'),
+          percentile: getPercentileRank(selectedTeamData, 'PPDA')
         }
       ] : []
     },
-    {
-      title: "Passing",
-      color: "#ca8a04",
+    block: {
+      title: "Block",
+      color: "#1A988B",
       metrics: selectedTeamData ? [
         { 
-          name: "Total Passes", 
-          value: getValue(selectedTeamData, 'Total passes'),
-          percentile: getPercentileRank(selectedTeamData, 'Total passes')
+          name: "Blocks", 
+          value: getValue(selectedTeamData, 'Blocks'),
+          percentile: getPercentileRank(selectedTeamData, 'Blocks')
         },
         { 
-          name: "Accurate Passes", 
-          value: getValue(selectedTeamData, 'Accurate passes'),
-          percentile: getPercentileRank(selectedTeamData, 'Accurate passes')
+          name: "Interceptions", 
+          value: getValue(selectedTeamData, 'Interceptions'),
+          percentile: getPercentileRank(selectedTeamData, 'Interceptions')
         },
         { 
-          name: "Pass Accuracy", 
-          value: getValue(selectedTeamData, 'Pass accuracy %'),
-          percentile: getPercentileRank(selectedTeamData, 'Pass accuracy %')
+          name: "Clearances", 
+          value: getValue(selectedTeamData, 'Clearances'),
+          percentile: getPercentileRank(selectedTeamData, 'Clearances')
+        },
+        { 
+          name: "Aerial Duels Won", 
+          value: getValue(selectedTeamData, 'Aerial duels won'),
+          percentile: getPercentileRank(selectedTeamData, 'Aerial duels won')
         }
       ] : []
     }
-  ]
+  }
 
-  const renderContent = () => (
-    <div className="min-h-screen bg-[#04122D]">
+  const getSectionRating = (metrics: any[]) => {
+    if (!metrics.length) return 0
+    return Math.round(
+      metrics.reduce((acc, metric) => acc + metric.percentile, 0) / metrics.length
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-[#181D21]">
       <Header 
         selectedTab={selectedTab}
         onTabChange={setSelectedTab}
       />
       <main className="pt-20 px-8 pb-8">
-        <div className="flex flex-col space-y-6">
-          {/* Title and selector container */}
-          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4
-                      border border-white/10">
-            <div className="flex items-center justify-between">
-              <div className="flex-1 text-center">
-                <h1 className="text-xl font-medium text-white/90">
-                  Opposition Summary: {selectedTeam || 'Select a team'}
-                </h1>
-              </div>
-              <TeamSelector 
-                selectedTeam={selectedTeam}
-                onTeamChange={setSelectedTeam}
-                teams={data.map(d => d.team)}
+        <AnimatePresence mode="wait">
+          {isLoading ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex items-center justify-center h-[60vh]"
+            >
+              <div className="text-lg text-white/60">Loading...</div>
+            </motion.div>
+          ) : error ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex items-center justify-center h-[60vh]"
+            >
+              <div className="text-lg text-red-400">{error}</div>
+            </motion.div>
+          ) : (
+            <motion.div 
+              className="flex flex-col space-y-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              {/* Header Panel */}
+              <motion.div 
+                className="stat-panel p-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-medium text-white/90">
+                    Opposition Summary: {selectedTeam || 'Select a team'}
+                  </h2>
+                  <TeamSelector 
+                    selectedTeam={selectedTeam}
+                    onTeamChange={setSelectedTeam}
+                    teams={data.map(d => d.team)}
+                  />
+                </div>
+              </motion.div>
+
+              {/* Stat Panels Grid */}
+              <div className="grid grid-cols-2 gap-8">
+    {Object.entries(sections).map(([key, section], index) => (
+      <motion.div 
+        key={key}
+        className="stat-panel p-5" // Reduced overall panel padding
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: index * 0.1 }}
+      >
+        <div className="flex items-center justify-between mb-4"> {/* Reduced margin bottom */}
+          <h3 className="text-lg font-medium text-white/90">
+            {section.title}
+          </h3>
+          <div className="flex items-center space-x-2"> {/* Changed to space-x-2 */}
+            <div className="w-14 h-14"> {/* Explicit sizing container */}
+              <GaugeChart 
+                value={getSectionRating(section.metrics)}
+                title=""
+                color={section.color}
+                className="w-full h-full"
               />
             </div>
           </div>
-  
-          {/* Content sections */}
-          <AnimatePresence>
-            {selectedTeam ? (
-              <motion.div 
-                className="space-y-8"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <div className="grid gap-8 grid-cols-1">
-                  {sections.map(section => (
-                    <motion.section
-                      key={section.title}
-                      className="bg-white/5 backdrop-blur-sm rounded-lg p-6
-                               border border-white/10 hover:border-white/20
-                               transition-colors duration-200"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <h2 className="text-xl font-medium text-white/90 mb-6">
-                        {section.title}
-                      </h2>
-                      <BarChart
-                        data={section.metrics}
-                        color={section.color}
-                        height={section.metrics.length * 60 + 40}
-                      />
-                    </motion.section>
-                  ))}
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex items-center justify-center h-[60vh]"
-              >
-                <h2 className="text-lg text-white/60">
-                  Select a team to view analytics
-                </h2>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
+        <BarChart
+          data={section.metrics}
+          color={section.color}
+          height={240}
+        />
+      </motion.div>
+    ))}
+  </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   )
-
-  return renderContent()
 }
 
 export default App
