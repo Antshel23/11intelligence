@@ -21,7 +21,7 @@ export const Header = ({ selectedTab, onTabChange }: HeaderProps) => {
                  flex items-center justify-between px-6 border-b border-gray-200"
     >
       <div className="flex items-center">
-        <img src="/image.png" alt="Company Logo" className="h-14 w-auto" />
+        <img src="/image.png" alt="Company Logo" className="max-w-[250px] h-auto" />
       </div>
 
       {/* Navigation Items moved to right */}

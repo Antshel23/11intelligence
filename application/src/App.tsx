@@ -93,19 +93,19 @@ function App() {
       color: "#1C79D1",
       metrics: selectedTeamData ? [
         { 
-          name: "Ball Recoveries", 
-          value: getValue(selectedTeamData, 'Ball recoveries'),
-          percentile: getPercentileRank(selectedTeamData, 'Ball recoveries')
+          name: "High Recoveries", 
+          value: getValue(selectedTeamData, 'High recoveries'),
+          percentile: getPercentileRank(selectedTeamData, 'High recoveries')
         },
         { 
-          name: "High Turnovers", 
-          value: getValue(selectedTeamData, 'High turnovers'),
-          percentile: getPercentileRank(selectedTeamData, 'High turnovers')
+          name: "Med Recoveries", 
+          value: getValue(selectedTeamData, 'Med recoveries'),
+          percentile: getPercentileRank(selectedTeamData, 'Med recoveries')
         },
         { 
-          name: "Pressure Success", 
-          value: getValue(selectedTeamData, 'Pressure success %'),
-          percentile: getPercentileRank(selectedTeamData, 'Pressure success %')
+          name: "Press Success", 
+          value: getValue(selectedTeamData, 'Oppo Progressive pass success %'),
+          percentile: getPercentileRank(selectedTeamData, 'Oppo Progressive pass success %')
         },
         { 
           name: "PPDA", 
@@ -120,8 +120,8 @@ function App() {
       metrics: selectedTeamData ? [
         { 
           name: "Blocks", 
-          value: getValue(selectedTeamData, 'Blocks'),
-          percentile: getPercentileRank(selectedTeamData, 'Blocks')
+          value: getValue(selectedTeamData, 'Oppo xG'),
+          percentile: getPercentileRank(selectedTeamData, 'Oppo xG')
         },
         { 
           name: "Interceptions", 
@@ -135,8 +135,8 @@ function App() {
         },
         { 
           name: "Aerial Duels Won", 
-          value: getValue(selectedTeamData, 'Aerial duels won'),
-          percentile: getPercentileRank(selectedTeamData, 'Aerial duels won')
+          value: getValue(selectedTeamData, 'Aerial duels won %'),
+          percentile: getPercentileRank(selectedTeamData, 'Aerial duels won %')
         }
       ] : []
     }
@@ -203,37 +203,35 @@ function App() {
 
               {/* Stat Panels Grid */}
               <div className="grid grid-cols-2 gap-8">
-    {Object.entries(sections).map(([key, section], index) => (
-      <motion.div 
-        key={key}
-        className="stat-panel p-5" // Reduced overall panel padding
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
-      >
-        <div className="flex items-center justify-between mb-4"> {/* Reduced margin bottom */}
-          <h3 className="text-lg font-medium text-white/90">
-            {section.title}
-          </h3>
-          <div className="flex items-center space-x-2"> {/* Changed to space-x-2 */}
-            <div className="w-14 h-14"> {/* Explicit sizing container */}
-              <GaugeChart 
-                value={getSectionRating(section.metrics)}
-                title=""
-                color={section.color}
-                className="w-full h-full"
-              />
-            </div>
-          </div>
-        </div>
-        <BarChart
-          data={section.metrics}
+{Object.entries(sections).map(([key, section], index) => (
+  <motion.div 
+    key={key}
+    className="stat-panel p-5"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: index * 0.1 }}
+  >
+    <div className="flex items-center justify-between mb-4">
+      <h3 className="text-lg font-medium text-white/90 flex-1">
+        {section.title}
+      </h3>
+      <div className="flex items-center justify-center h-12 w-12"> {/* Increased size and added centering */}
+        <GaugeChart 
+          value={getSectionRating(section.metrics)}
+          title=""
           color={section.color}
-          height={240}
+          className="w-full h-full"
         />
-      </motion.div>
-    ))}
-  </div>
+      </div>
+    </div>
+    <BarChart
+      data={section.metrics}
+      color={section.color}
+      height={240}
+    />
+  </motion.div>
+))}
+</div>
             </motion.div>
           )}
         </AnimatePresence>
