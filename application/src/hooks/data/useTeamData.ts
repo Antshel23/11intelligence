@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { processData } from '../utils/dataProcessor'
-import type { TeamStats } from '../types'
+import { processTeamData } from '../../utils/processors/teamDataProcessor'
+import type { TeamStats } from '../../types'
 
 export function useTeamData() {
   const [data, setData] = useState<TeamStats[]>([])
@@ -13,10 +13,14 @@ export function useTeamData() {
       try {
         setIsLoading(true)
         setError(null)
-        const teamData = await processData()
-        setData(teamData)
-        if (teamData.length > 0) {
-          setSelectedTeam(teamData[0].team)
+        const teamData = await processTeamData()
+        
+        // Filter to only include teams where season='24/25'
+        const filteredData = teamData.filter(team => team.season === '24/25')
+        
+        setData(filteredData)
+        if (filteredData.length > 0) {
+          setSelectedTeam(filteredData[0].team)
         }
       } catch (err) {
         setError('Failed to load team data')

@@ -1,35 +1,12 @@
-import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BarChart } from '../components/charts/BarChart'
 import { GaugeChart } from '../components/charts/GaugeChart'
-import { processData, getValue, getPercentileRank } from '../utils/dataProcessor'
-import type { TeamStats } from '../utils/dataProcessor'
+import { useTeamData } from '../hooks/data/useTeamData'
+import { getValue, getPercentileRank } from '../utils/processors/teamDataProcessor'
 import { TeamSelector } from '../components/common/TeamSelector'
 
 function OppositionView() {
-  const [data, setData] = useState<TeamStats[]>([])
-  const [selectedTeam, setSelectedTeam] = useState<string>('')
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setIsLoading(true)
-        const teamData = await processData()
-        setData(teamData)
-        if (teamData.length > 0) {
-          setSelectedTeam(teamData[0].team)
-        }
-      } catch (err) {
-        setError('Failed to load team data')
-        console.error('Error loading data:', err)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    loadData()
-  }, [])
+  const { data, selectedTeam, setSelectedTeam, isLoading, error, teams } = useTeamData()
 
   const selectedTeamData = data.find(d => d.team === selectedTeam)
 
@@ -133,8 +110,8 @@ function OppositionView() {
         },
         { 
           name: "Aerial Duels Won", 
-          value: getValue(selectedTeamData, 'Aerial duels won %'),
-          percentile: getPercentileRank(selectedTeamData, 'Aerial duels won %')
+          value: getValue(selectedTeamData, 'Aerial duel success %'),
+          percentile: getPercentileRank(selectedTeamData, 'Aerial duel success %')
         }
       ] : []
     }
@@ -189,7 +166,7 @@ function OppositionView() {
                 <TeamSelector 
                   selectedTeam={selectedTeam}
                   onTeamChange={setSelectedTeam}
-                  teams={data.map(d => d.team)}
+                  teams={teams}
                 />
               </div>
             </motion.div>
