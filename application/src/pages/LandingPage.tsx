@@ -45,7 +45,7 @@ function LandingPage() {
         className="text-center mb-12"
       >
         <h1 className="text-4xl font-bold text-white mb-4">
-          Soccer Analytics Dashboard
+          Analytics Dashboard
         </h1>
         <p className="text-lg text-white/70">
           Choose a feature to explore team and player insights

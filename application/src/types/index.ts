@@ -21,16 +21,22 @@ export interface TeamStats {
   }
 }
 
-// Player-related types - PLACEHOLDER
-export interface PlayerStats {
+// Player interface
+export interface Player {
   name: string;
   team: string;
-  position: string;
-  age: number;
   season: string;
+  position: string;
+  age: string | number;
+  contract: string | number;
+  minutes: string | number;
+  passport: string;
+  foot: string;
+  height: string | number;
+  league: string;
   stats: {
-    [key: string]: StatValue;
-  }
+    [key: string]: number;
+  };
 }
 
 // Match/Progress-related types - PLACEHOLDER
@@ -42,7 +48,7 @@ export interface MatchStats {
   season: string;
   stats: {
     [key: string]: StatValue;
-  }
+  };
 }
 
 // Chart component types
