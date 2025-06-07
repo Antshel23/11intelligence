@@ -1,1 +1,3 @@
-# 11-Intelligence-Scouting-Platform
+# elevenintelligence
+
+# To run - use npm run dev -- --host
