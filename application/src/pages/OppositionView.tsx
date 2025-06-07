@@ -94,7 +94,7 @@ function OppositionView() {
       color: "#1A988B",
       metrics: selectedTeamData ? [
         { 
-          name: "Blocks", 
+          name: "xG against", 
           value: getValue(selectedTeamData, 'Oppo xG'),
           percentile: getPercentileRank(selectedTeamData, 'Oppo xG')
         },
@@ -109,7 +109,7 @@ function OppositionView() {
           percentile: getPercentileRank(selectedTeamData, 'Clearances')
         },
         { 
-          name: "Aerial Duels Won", 
+          name: "Aerial Success", 
           value: getValue(selectedTeamData, 'Aerial duel success %'),
           percentile: getPercentileRank(selectedTeamData, 'Aerial duel success %')
         }
@@ -152,24 +152,55 @@ function OppositionView() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {/* Header Panel */}
-            <motion.div 
-              className="stat-panel p-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-medium text-white/90">
-                  Opposition Summary: {selectedTeam || 'Select a team'}
-                </h2>
-                <TeamSelector 
-                  selectedTeam={selectedTeam}
-                  onTeamChange={setSelectedTeam}
-                  teams={teams}
-                />
-              </div>
-            </motion.div>
+
+{/* Header Panel */}
+<motion.div 
+  className="stat-panel p-2.5"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+>
+  {/* Single Row Layout */}
+  <div className="flex items-center justify-between">
+    {/* Left Side - Logo and Team Name */}
+    <div className="flex items-center">
+      <img 
+        src="/img400400.png" 
+        alt="Team Logo" 
+        className="h-16 w-16 mr-6"
+      />
+      <div className="text-2xl font-medium text-[#EFEFEF]">
+        {selectedTeam || 'Select a team'}
+      </div>
+    </div>
+
+    {/* Center - Overall Ratings */}
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center space-x-8">
+      {Object.entries(sections).map(([key, section]) => (
+        <div key={key} className="flex flex-col items-center">
+          <div className="h-10 w-20 mb--1">
+            <GaugeChart 
+              value={getSectionRating(section.metrics)}
+              title=""
+              color={section.color}
+              className="w-full h-full text-center"
+            />
+          </div>
+          <div className="text-xs text-[#EFEFEF] text-center">
+            {section.title}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Right Side - Team Selector */}
+    <TeamSelector 
+      selectedTeam={selectedTeam}
+      onTeamChange={setSelectedTeam}
+      teams={teams}
+    />
+  </div>
+</motion.div>
 
             {/* Stat Panels Grid */}
             <div className="grid grid-cols-2 gap-8">
@@ -181,18 +212,10 @@ function OppositionView() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-medium text-white/90 flex-1">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-medium text-white/90">
                       {section.title}
                     </h3>
-                    <div className="flex items-center justify-center h-12 w-12">
-                      <GaugeChart 
-                        value={getSectionRating(section.metrics)}
-                        title=""
-                        color={section.color}
-                        className="w-full h-full"
-                      />
-                    </div>
                   </div>
                   <BarChart
                     data={section.metrics}

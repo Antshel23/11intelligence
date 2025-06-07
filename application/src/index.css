@@ -19,12 +19,6 @@
     @apply text-2xl font-semibold text-gray-300 tracking-tight
            relative pb-2 mb-6;
   }
-
-  h2::after {
-    content: '';
-    @apply absolute bottom-0 left-0 w-12 h-0.5 
-           bg-gradient-to-r from-[#7406B5] to-[#D50033];
-  }
 }
 
 @layer components {
