@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { RadarChart } from '../components/charts/RadarChart'
-import { GaugeChart } from '../components/charts/GaugeChart'
 import { usePlayerData } from '../hooks/data/usePlayerData'
 import { getValue, getPercentileRank } from '../utils/processors/playerDataProcessor'
 import { PlayerSelector } from '../components/common/PlayerSelector'
@@ -44,42 +43,6 @@ function PlayerView() {
       value: getValue(selectedPlayer, statName),
       percentile: getPercentileRank(selectedPlayer, statName, samePositionPlayers)
     }))
-  }
-
-  // Get overall rating categories
-  const getOverallRatings = () => {
-    if (!selectedPlayer) return {}
-    
-    const stats = getPositionStats(selectedPlayer.position)
-    const radarData = getRadarData()
-    
-    // Group stats into categories based on position
-    const categories = {
-      technical: radarData.slice(0, Math.ceil(stats.length / 3)),
-      physical: radarData.slice(Math.ceil(stats.length / 3), Math.ceil(stats.length * 2 / 3)),
-      tactical: radarData.slice(Math.ceil(stats.length * 2 / 3))
-    }
-
-    return {
-      technical: {
-        title: "Technical",
-        color: "#7406B5",
-        rating: categories.technical.length ? 
-          Math.round(categories.technical.reduce((acc, stat) => acc + stat.percentile, 0) / categories.technical.length) : 0
-      },
-      physical: {
-        title: "Physical", 
-        color: "#D50033",
-        rating: categories.physical.length ?
-          Math.round(categories.physical.reduce((acc, stat) => acc + stat.percentile, 0) / categories.physical.length) : 0
-      },
-      tactical: {
-        title: "Tactical",
-        color: "#1C79D1", 
-        rating: categories.tactical.length ?
-          Math.round(categories.tactical.reduce((acc, stat) => acc + stat.percentile, 0) / categories.tactical.length) : 0
-      }
-    }
   }
 
   return (
@@ -143,26 +106,6 @@ function PlayerView() {
                   </div>
                 </div>
 
-                {/* Center - Overall Ratings */}
-                {selectedPlayer && (
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center space-x-8">
-                    {Object.entries(getOverallRatings()).map(([key, category]) => (
-                      <div key={key} className="flex flex-col items-center">
-                        <div className="h-10 w-20 mb-1">
-                          <GaugeChart 
-                            value={category.rating}
-                            title=""
-                            color={category.color}
-                            className="w-full h-full text-center"
-                          />
-                        </div>
-                        <div className="text-xs text-[#EFEFEF] text-center">
-                          {category.title}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
 
                 {/* Right Side - Player Selector */}
                 <div className="relative z-30">
