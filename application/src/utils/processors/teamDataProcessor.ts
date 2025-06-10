@@ -25,5 +25,5 @@ export const getValue = (team: TeamStats, statKey: string): number => {
 }
 
 export const getPercentileRank = (team: TeamStats, statKey: string): number => {
-  return team.stats[statKey]?.percentileRank ?? 0;
+  return team.stats[statKey]?.percentile ?? 0;
 }

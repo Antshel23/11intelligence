@@ -37,7 +37,7 @@ export function BarChart({ data, color, height = 600 }: BarChartProps) {
             
             {/* Bar container */}
             <div className="flex-1 relative">
-              <div className="w-full h-10 bg-white/10 rounded-lg overflow-hidden">
+              <div className="w-full h-7 bg-white/10 rounded-lg overflow-hidden">
                 <div 
                   className="h-full rounded-lg transition-all duration-300 flex items-center justify-end pr-3"
                   style={{ 

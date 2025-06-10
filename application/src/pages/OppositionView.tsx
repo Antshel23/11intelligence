@@ -16,25 +16,35 @@ function OppositionView() {
       color: "#7406B5",
       metrics: selectedTeamData ? [
         { 
-          name: "Long Ball", 
+          name: "Possession", 
+          value: getValue(selectedTeamData, 'Possession'),
+          percentile: getPercentileRank(selectedTeamData, 'Possession')
+        },
+        { 
+          name: "Long Ball %", 
           value: getValue(selectedTeamData, 'Long pass %'),
           percentile: getPercentileRank(selectedTeamData, 'Long pass %')
         },
         { 
-          name: "Progressive Passes", 
-          value: getValue(selectedTeamData, 'Total progressive passes'),
-          percentile: getPercentileRank(selectedTeamData, 'Total progressive passes')
+          name: "Build Up Safety" ,
+          value: getValue(selectedTeamData, 'Losses low %'),
+          percentile: getPercentileRank(selectedTeamData, 'Losses low %')
         },
         { 
-          name: "Final Third Entries", 
-          value: getValue(selectedTeamData, 'Total final third passes'),
-          percentile: getPercentileRank(selectedTeamData, 'Total final third passes')
+          name: "Def/Mid 3rd Progression", 
+          value: getValue(selectedTeamData, 'Progressive pass success %'),
+          percentile: getPercentileRank(selectedTeamData, 'Progressive pass success %')
         },
         { 
-          name: "Possession", 
-          value: getValue(selectedTeamData, 'Possession'),
-          percentile: getPercentileRank(selectedTeamData, 'Possession')
-        }
+          name: "Final 3rd Progression", 
+          value: getValue(selectedTeamData, 'Final third pass success %'),
+          percentile: getPercentileRank(selectedTeamData, 'Final third pass success %')
+        },
+        { 
+          name: "Final 3rd Entries", 
+          value: getValue(selectedTeamData, 'Final third entries'),
+          percentile: getPercentileRank(selectedTeamData, 'Final third entries')
+        },
       ] : []
     },
     chanceCreation: {
@@ -47,19 +57,39 @@ function OppositionView() {
           percentile: getPercentileRank(selectedTeamData, 'xG')
         },
         { 
-          name: "Box entry via cross", 
+          name: "Attacking Efficiency", 
+          value: getValue(selectedTeamData, 'Positional attacks leading to shot %'),
+          percentile: getPercentileRank(selectedTeamData, 'Positional attacks leading to shot %')
+        },
+        { 
+          name: "Cross Threat", 
           value: getValue(selectedTeamData, 'Box entry via cross'),
           percentile: getPercentileRank(selectedTeamData, 'Box entry via cross')
         },
         { 
-          name: "Box entry via run", 
+          name: "1v1 dribble Threat", 
           value: getValue(selectedTeamData, 'Box entry via run'),
           percentile: getPercentileRank(selectedTeamData, 'Box entry via run')
         },
         { 
-          name: "Goals", 
-          value: getValue(selectedTeamData, 'Goals'),
-          percentile: getPercentileRank(selectedTeamData, 'Goals')
+          name: "10 space pass Threat", 
+          value: getValue(selectedTeamData, 'Deep completed passes'),
+          percentile: getPercentileRank(selectedTeamData, 'Deep completed passes')
+        },
+        { 
+          name: "Throughball Threat", 
+          value: getValue(selectedTeamData, 'Through balls'),
+          percentile: getPercentileRank(selectedTeamData, 'Through balls')
+        },
+        { 
+          name: "Counterattack Threat", 
+          value: getValue(selectedTeamData, 'Total counterattacks'),
+          percentile: getPercentileRank(selectedTeamData, 'Total counterattacks')
+        },
+        { 
+          name: "Set-piece Threat", 
+          value: getValue(selectedTeamData, 'Set piece shot %'),
+          percentile: getPercentileRank(selectedTeamData, 'Set piece shot %')
         }
       ] : []
     },
@@ -68,24 +98,29 @@ function OppositionView() {
       color: "#1C79D1",
       metrics: selectedTeamData ? [
         { 
-          name: "High Recoveries", 
-          value: getValue(selectedTeamData, 'High recoveries'),
-          percentile: getPercentileRank(selectedTeamData, 'High recoveries')
+          name: "Press Intensity", 
+          value: getValue(selectedTeamData, 'PPDA'),
+          percentile: getPercentileRank(selectedTeamData, 'PPDA')
         },
         { 
-          name: "Med Recoveries", 
-          value: getValue(selectedTeamData, 'Med recoveries'),
-          percentile: getPercentileRank(selectedTeamData, 'Med recoveries')
-        },
-        { 
-          name: "Press Success", 
+          name: "Press Efficiency", 
           value: getValue(selectedTeamData, 'Oppo Progressive pass success %'),
           percentile: getPercentileRank(selectedTeamData, 'Oppo Progressive pass success %')
         },
         { 
-          name: "PPDA", 
-          value: getValue(selectedTeamData, 'PPDA'),
-          percentile: getPercentileRank(selectedTeamData, 'PPDA')
+          name: "Att 3rd Regains", 
+          value: getValue(selectedTeamData, 'Recoveries high %'),
+          percentile: getPercentileRank(selectedTeamData, 'Recoveries high %')
+        },
+        { 
+          name: "Med 3rd Regains", 
+          value: getValue(selectedTeamData, 'Recoveries med %'),
+          percentile: getPercentileRank(selectedTeamData, 'Recoveries med %')
+        },
+        { 
+          name: "Transition Protection", 
+          value: getValue(selectedTeamData, 'Oppo Total counterattacks'),
+          percentile: getPercentileRank(selectedTeamData, 'Oppo Total counterattacks')
         }
       ] : []
     },
@@ -94,22 +129,22 @@ function OppositionView() {
       color: "#1A988B",
       metrics: selectedTeamData ? [
         { 
-          name: "xG against", 
+          name: "Expected Goals Against", 
           value: getValue(selectedTeamData, 'Oppo xG'),
           percentile: getPercentileRank(selectedTeamData, 'Oppo xG')
         },
         { 
-          name: "Interceptions", 
-          value: getValue(selectedTeamData, 'Interceptions'),
-          percentile: getPercentileRank(selectedTeamData, 'Interceptions')
+          name: "Def 3rd Entry Restriction", 
+          value: getValue(selectedTeamData, 'Oppo Final third pass success %'),
+          percentile: getPercentileRank(selectedTeamData, 'Oppo Final third pass success %')
         },
         { 
-          name: "Clearances", 
-          value: getValue(selectedTeamData, 'Clearances'),
-          percentile: getPercentileRank(selectedTeamData, 'Clearances')
+          name: "Chance Restriction", 
+          value: getValue(selectedTeamData, 'Oppo open play attacks per final third entry'),
+          percentile: getPercentileRank(selectedTeamData, 'Oppo open play attacks per final third entry')
         },
         { 
-          name: "Aerial Success", 
+          name: "Aerial Win %", 
           value: getValue(selectedTeamData, 'Aerial duel success %'),
           percentile: getPercentileRank(selectedTeamData, 'Aerial duel success %')
         }
@@ -125,7 +160,7 @@ function OppositionView() {
   }
 
   return (
-    <div className="flex flex-col space-y-8">
+    <div className="flex flex-col space-y-6 p-6">
       <AnimatePresence mode="wait">
         {isLoading ? (
           <motion.div
@@ -147,81 +182,97 @@ function OppositionView() {
           </motion.div>
         ) : (
           <motion.div 
-            className="flex flex-col space-y-8"
+            className="flex flex-col space-y-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
 
-{/* Header Panel */}
-<motion.div 
-  className="stat-panel p-2.5"
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5 }}
->
-  {/* Single Row Layout */}
-  <div className="flex items-center justify-between">
-    {/* Left Side - Logo and Team Name */}
-    <div className="flex items-center">
-      <img 
-        src="/img400400.png" 
-        alt="Team Logo" 
-        className="h-16 w-16 mr-6"
-      />
-      <div className="text-2xl font-medium text-[#EFEFEF]">
-        {selectedTeam || 'Select a team'}
-      </div>
-    </div>
+            {/* Header Panel */}
+            <motion.div 
+              className="stat-panel p-4 relative overflow-hidden"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {/* Background gradient effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-blue-500/10 pointer-events-none" />
+              
+              {/* Single Row Layout */}
+              <div className="flex items-center justify-between relative z-10">
+                {/* Left Side - Logo and Team Name */}
+                <div className="flex items-center">
+                  <img 
+                    src="/TUFC.png" 
+                    alt="Team Logo" 
+                    className="h-16 w-16 mr-6"
+                  />
+                  <div className="text-2xl font-medium text-[#EFEFEF]">
+                    {selectedTeam || 'Select a team'}
+                  </div>
+                </div>
 
-    {/* Center - Overall Ratings */}
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center space-x-8">
-      {Object.entries(sections).map(([key, section]) => (
-        <div key={key} className="flex flex-col items-center">
-          <div className="h-10 w-20 mb--1">
-            <GaugeChart 
-              value={getSectionRating(section.metrics)}
-              title=""
-              color={section.color}
-              className="w-full h-full text-center"
-            />
-          </div>
-          <div className="text-xs text-[#EFEFEF] text-center">
-            {section.title}
-          </div>
-        </div>
-      ))}
-    </div>
+                {/* Center - Overall Ratings */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center space-x-8">
+                  {Object.entries(sections).map(([key, section]) => (
+                    <div key={key} className="flex flex-col items-center">
+                      <div className="h-10 w-20 mb--1">
+                        <GaugeChart 
+                          value={getSectionRating(section.metrics)}
+                          title=""
+                          color={section.color}
+                          className="w-full h-full text-center"
+                        />
+                      </div>
+                      <div className="text-xs text-[#EFEFEF] text-center">
+                        {section.title}
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
-    {/* Right Side - Team Selector */}
-    <TeamSelector 
-      selectedTeam={selectedTeam}
-      onTeamChange={setSelectedTeam}
-      teams={teams}
-    />
-  </div>
-</motion.div>
+                {/* Right Side - Team Selector */}
+                <TeamSelector 
+                  selectedTeam={selectedTeam}
+                  onTeamChange={setSelectedTeam}
+                  teams={teams}
+                />
+              </div>
+            </motion.div>
 
             {/* Stat Panels Grid */}
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-2 gap-6">
               {Object.entries(sections).map(([key, section], index) => (
                 <motion.div 
                   key={key}
-                  className="stat-panel p-5"
+                  className="stat-panel p-5 relative overflow-hidden"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <div className="mb-4">
+                  {/* Section-specific background gradient */}
+                  <div 
+                    className="absolute inset-0 opacity-10 pointer-events-none"
+                    style={{ background: `linear-gradient(135deg, ${section.color}30, transparent 70%)` }}
+                  />
+                  {/* Secondary gradient layer for more depth */}
+                  <div 
+                    className="absolute inset-0 opacity-5 pointer-events-none"
+                    style={{ background: `radial-gradient(circle at top right, ${section.color}40, transparent 50%)` }}
+                  />
+                  
+                  <div className="mb-4 relative z-10">
                     <h3 className="text-lg font-medium text-white/90">
                       {section.title}
                     </h3>
                   </div>
-                  <BarChart
-                    data={section.metrics}
-                    color={section.color}
-                    height={240}
-                  />
+                  <div className="relative z-10">
+                    <BarChart
+                      data={section.metrics}
+                      color={section.color}
+                      height={240}
+                    />
+                  </div>
                 </motion.div>
               ))}
             </div>
