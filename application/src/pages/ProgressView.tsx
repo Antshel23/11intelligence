@@ -323,7 +323,7 @@ function ProgressView() {
               <div className="lg:w-1/3 flex flex-col gap-4">
                 {/* xPts */}
                 <motion.div className="stat-panel p-4 relative overflow-hidden flex-1 min-h-[120px]">
-                  <div className="mb-2 text-white/80 font-medium text-sm">xPts Projection</div>
+                  <div className="mb-2 text-white/80 font-medium text-sm">Expected Points Projection</div>
                   <LineChart
                     data={xPointsData.map(d => ({ match: d.match, matchId: d.matchId, value: d.value }))}
                     height={90}
@@ -339,7 +339,7 @@ function ProgressView() {
                 </motion.div>
                 {/* xG Difference */}
                 <motion.div className="stat-panel p-4 relative overflow-hidden flex-1 min-h-[120px]">
-                  <div className="mb-2 text-white/80 font-medium text-sm">xG Difference</div>
+                  <div className="mb-2 text-white/80 font-medium text-sm">xG Difference (Creating and Preventing Chances)</div>
                   <LineChart
                     data={xgDiffData}
                     height={90}
@@ -354,7 +354,7 @@ function ProgressView() {
                 </motion.div>
                 {/* Progressive Pass Success Difference */}
                 <motion.div className="stat-panel p-4 relative overflow-hidden flex-1 min-h-[120px]">
-                  <div className="mb-2 text-white/80 font-medium text-sm">Progressive Pass Success Diff</div>
+                  <div className="mb-2 text-white/80 font-medium text-sm">Progression Control (Buildup and Press)</div>
                   <LineChart
                     data={progPassDiffData}
                     height={90}
@@ -369,7 +369,7 @@ function ProgressView() {
                 </motion.div>
                 {/* xG Performance */}
                 <motion.div className="stat-panel p-4 relative overflow-hidden flex-1 min-h-[120px]">
-                  <div className="mb-2 text-white/80 font-medium text-sm">xG Performance</div>
+                  <div className="mb-2 text-white/80 font-medium text-sm">xG Performance (Finishing and Stopping Chances)</div>
                   <LineChart
                     data={xgPerfData}
                     height={90}
