@@ -4,33 +4,145 @@ import { LineChart } from '../components/charts/LineChart'
 import { useMatchData } from '../hooks/data/useMatchData'
 import { MatchSelector } from '../components/common/MatchSelector'
 import { getValue, getOppositionValue } from '../utils/processors/matchDataProcessor'
+import { useMemo } from 'react'
 
 function ProgressView() {
   const { data, selectedMatch, setSelectedMatch, isLoading, error, matches } = useMatchData()
-
-  // Find selected match data using the match object instead of ID
   const selectedMatchData = selectedMatch
 
-  // Calculate xPoints running average
-  const xPointsData = data
-    .sort((a, b) => a.matchId - b.matchId)
-    .map((match, index) => {
-      const xPoints = getValue(match, "Dorking Wanderers", "xPoints")
-      const runningTotal = data
-        .filter(m => m.matchId <= match.matchId)
-        .reduce((sum, m) => sum + getValue(m, "Dorking Wanderers", "xPoints"), 0)
-      const runningAverage = (runningTotal / (index + 1)) * 46
-      
-      return {
-        match: match.match,
-        matchId: match.matchId,
-        xPoints: runningAverage
-      }
-    })
+  // Sort data by matchId ascending
+  const sortedData = useMemo(() => [...data].sort((a, b) => a.matchId - b.matchId), [data])
 
-  const getStatsComparison = () => {
+  // xPoints running average (projected to 46 games)
+  const xPointsData = sortedData.map((match, index) => {
+    const xPoints = getValue(match, "Dorking Wanderers", "xPoints")
+    const runningTotal = sortedData
+      .filter(m => m.matchId <= match.matchId)
+      .reduce((sum, m) => sum + getValue(m, "Dorking Wanderers", "xPoints"), 0)
+    const runningAverage = (runningTotal / (index + 1)) * 46
+    return {
+      match: match.match,
+      matchId: match.matchId,
+      value: runningAverage
+    }
+  })
+
+  // Helper to get last N matches for rolling average
+  const rollingWindow = 5
+
+  // xG Difference (5-game rolling average)
+  const xgDiffData = sortedData.map((match, index) => {
+    const windowStart = Math.max(0, index - rollingWindow + 1)
+    const windowMatches = sortedData.slice(windowStart, index + 1)
+    const sum = windowMatches.reduce(
+      (acc, m) => acc + (getValue(m, "Dorking Wanderers", "xG") - getOppositionValue(m, "xG")),
+      0
+    )
+    return {
+      match: match.match,
+      matchId: match.matchId,
+      value: sum / windowMatches.length
+    }
+  })
+
+  // Progressive Pass Success Difference (5-game rolling average)
+  const progPassDiffData = sortedData.map((match, index) => {
+    const windowStart = Math.max(0, index - rollingWindow + 1)
+    const windowMatches = sortedData.slice(windowStart, index + 1)
+    const sum = windowMatches.reduce(
+      (acc, m) => acc + (getValue(m, "Dorking Wanderers", "Progressive pass success %") - getOppositionValue(m, "Progressive pass success %")),
+      0
+    )
+    return {
+      match: match.match,
+      matchId: match.matchId,
+      value: sum / windowMatches.length
+    }
+  })
+
+  // xG Performance (5-game rolling average)
+  const xgPerfData = sortedData.map((match, index) => {
+    const windowStart = Math.max(0, index - rollingWindow + 1)
+    const windowMatches = sortedData.slice(windowStart, index + 1)
+    const sum = windowMatches.reduce(
+      (acc, m) => acc + ((getValue(m, "Dorking Wanderers", "Goals") - getValue(m, "Dorking Wanderers", "xG")) - (getOppositionValue(m, "Goals") - getOppositionValue(m, "xG"))),
+      0
+    )
+    return {
+      match: match.match,
+      matchId: match.matchId,
+      value: sum / windowMatches.length
+    }
+  })
+
+  // --- Match Comparison Section Stats ---
+
+  // Helper for box entries
+  const getBoxEntries = (dataObj: any, team: string) =>
+    getValue(dataObj, team, "Box entry via run") +
+    getValue(dataObj, team, "Box entry via cross") +
+    getValue(dataObj, team, "Deep completed passes")
+
+
+  // Helper for intensity
+  const getIntensity = (dataObj: any, team: string, oppTeam: string) => {
+    const defDuels = getValue(dataObj, team, "Total Def duels")
+    const oppPasses = getValue(dataObj, oppTeam, "Total passes")
+    const totalGamePasses = getValue(dataObj, team, "Total passes") + oppPasses
+    const totalDefDuels = defDuels + getValue(dataObj, oppTeam, "Total Def duels")
+    const totalIntensity = totalDefDuels / totalGamePasses
+
+    return (defDuels / oppPasses) / totalIntensity*100
+  }
+
+  // Final Third Section
+  const getFinalThirdStats = () => {
     if (!selectedMatchData) return []
+    const dorkingBoxEntries = getBoxEntries(selectedMatchData, "Dorking Wanderers")
+    const oppBoxEntries = getBoxEntries(selectedMatchData, "Opposition")
+    return [
+      {
+        name: "xG",
+        dorking: getValue(selectedMatchData, "Dorking Wanderers", "xG"),
+        opposition: getOppositionValue(selectedMatchData, "xG")
+      },
+      {
+        name: "xG per box entry",
+        dorking: dorkingBoxEntries ? getValue(selectedMatchData, "Dorking Wanderers", "xG") / dorkingBoxEntries : 0,
+        opposition: oppBoxEntries ? getOppositionValue(selectedMatchData, "xG") / oppBoxEntries : 0
+      },
 
+      {
+        name: "Open play shots",
+        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Positional attacks leading to shot"),
+        opposition: getOppositionValue(selectedMatchData, "Positional attacks leading to shot")
+      },
+      {
+        name: "Box entries",
+        dorking: dorkingBoxEntries,
+        opposition: oppBoxEntries
+      },
+      {
+        name: "Box entry via cross",
+        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Box entry via cross"),
+        opposition: getOppositionValue(selectedMatchData, "Box entry via cross")
+      },
+      {
+        name: "Box entry via run",
+        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Box entry via run"),
+        opposition: getOppositionValue(selectedMatchData, "Box entry via run")
+      },
+      {
+        name: "Deep completed passes",
+        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Deep completed passes"),
+        opposition: getOppositionValue(selectedMatchData, "Deep completed passes")
+      }
+    ]
+  }
+
+  // Progression Section
+  const getProgressionStats = () => {
+    if (!selectedMatchData) return []
     return [
       {
         name: "Possession %",
@@ -38,29 +150,44 @@ function ProgressView() {
         opposition: getOppositionValue(selectedMatchData, "Possession")
       },
       {
-        name: "xG",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "xG"),
-        opposition: getOppositionValue(selectedMatchData, "xG")
-      },
-      {
-        name: "Pass Accuracy %",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Pass accuracy %"),
-        opposition: getOppositionValue(selectedMatchData, "Pass accuracy %")
-      },
-      {
-        name: "Aerial Duel Success %",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Aerial duel success %"),
-        opposition: getOppositionValue(selectedMatchData, "Aerial duel success %")
-      },
-      {
-        name: "Progressive Pass Success %",
+        name: "Progressive pass success %",
         dorking: getValue(selectedMatchData, "Dorking Wanderers", "Progressive pass success %"),
         opposition: getOppositionValue(selectedMatchData, "Progressive pass success %")
-      }
+      },
+      {
+        name: "Total final third entries",
+        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Successful final third passes"),
+        opposition: getOppositionValue(selectedMatchData, "Successful final third passes")
+      },
+      {
+        name: "Open play attacks",
+        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Total positional attacks"),
+        opposition: getOppositionValue(selectedMatchData, "Total positional attacks")
+      },
     ]
   }
 
-  const statsComparison = getStatsComparison()
+  // Press Section
+  const getPressStats = () => {
+    if (!selectedMatchData) return []
+    return [
+      {
+        name: "High regains",
+        dorking: getValue(selectedMatchData, "Dorking Wanderers", "High recoveries"),
+        opposition: getOppositionValue(selectedMatchData, "High recoveries")
+      },
+      {
+        name: "Def duel success %",
+        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Def duel success %"),
+        opposition: getOppositionValue(selectedMatchData, "Def duel success %")
+      },
+      {
+        name: "Intensity",
+        dorking: getIntensity(selectedMatchData, "Dorking Wanderers", "Opposition"),
+        opposition: getIntensity(selectedMatchData, "Opposition", "Dorking Wanderers")
+      }
+    ]
+  }
 
   return (
     <div className="flex flex-col space-y-6 p-6 relative" style={{ zIndex: 1 }}>
@@ -144,18 +271,18 @@ function ProgressView() {
               </div>
             </motion.div>
 
-            {/* Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Main Split Layout */}
+            <div className="flex flex-col lg:flex-row gap-6">
               
-              {/* Match Comparison Panel - Takes 2 columns on large screens */}
+              {/* Left: Match Comparison Panel (full height) */}
               <motion.div 
-                className="lg:col-span-2 stat-panel p-5 relative overflow-hidden"
+                className="lg:w-2/3 stat-panel p-5 relative overflow-hidden flex-shrink-0"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
+                style={{ minHeight: '700px' }}
               >
                 <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
-                
                 <div className="mb-4 relative z-10">
                   <h3 className="text-lg font-medium text-white/90">
                     Match Comparison
@@ -164,52 +291,98 @@ function ProgressView() {
                     Dorking Wanderers vs Opposition
                   </div>
                 </div>
-                <div className="relative z-10">
-                  {statsComparison.length > 0 ? (
+                <div className="relative z-10 flex flex-row h-full">
+                  {/* Final Third Section */}
+                  <div className="flex-1 flex flex-col pr-6 border-r border-white/15">
+                    <div className="font-semibold text-white/80 mb-2">Final Third</div>
                     <StackedBarChart
-                      data={statsComparison}
-                      height={350}
+                      data={getFinalThirdStats()}
+                      height={320}
                     />
-                  ) : (
-                    <div className="flex items-center justify-center h-[350px] text-white/40">
-                      Select a match to view comparison
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-
-              {/* Season Progression Panel - Takes 1 column on large screens */}
-              <motion.div 
-                className="lg:col-span-1 stat-panel p-5 relative overflow-hidden"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-green-500 to-transparent" />
-                
-                <div className="mb-4 relative z-10">
-                  <h3 className="text-lg font-medium text-white/90">
-                    Season Progression
-                  </h3>
-                  <div className="text-sm text-white/60 mt-1">
-                    Expected Points (46 game projection)
+                  </div>
+                  {/* Progression Section */}
+                  <div className="flex-1 flex flex-col px-6 border-r border-white/15">
+                    <div className="font-semibold text-white/80 mb-2">Progression</div>
+                    <StackedBarChart
+                      data={getProgressionStats()}
+                      height={180}
+                    />
+                  </div>
+                  {/* Press Section */}
+                  <div className="flex-1 flex flex-col pl-6">
+                    <div className="font-semibold text-white/80 mb-2">Press</div>
+                    <StackedBarChart
+                      data={getPressStats()}
+                      height={140}
+                    />
                   </div>
                 </div>
-                <div className="relative z-10">
-                  {xPointsData.length > 0 ? (
-                    <LineChart
-                      data={xPointsData}
-                      height={350}
-                      color="#10B981"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-[350px] text-white/40">
-                      No progression data available
-                    </div>
-                  )}
-                </div>
               </motion.div>
 
+              {/* Right: 5 stacked time series charts */}
+              <div className="lg:w-1/3 flex flex-col gap-4">
+                {/* xPts */}
+                <motion.div className="stat-panel p-4 relative overflow-hidden flex-1 min-h-[120px]">
+                  <div className="mb-2 text-white/80 font-medium text-sm">xPts Projection</div>
+                  <LineChart
+                    data={xPointsData.map(d => ({ match: d.match, matchId: d.matchId, value: d.value }))}
+                    height={90}
+                    color="#10B981"
+                    currentValue={
+                      xPointsData.length
+                        ? xPointsData.reduce((sum, d) => sum + d.value, 0) / xPointsData.length
+                        : undefined
+                    }
+                    currentValueLabel="Overall avg"
+                    valueSuffix=" pts"
+                  />
+                </motion.div>
+                {/* xG Difference */}
+                <motion.div className="stat-panel p-4 relative overflow-hidden flex-1 min-h-[120px]">
+                  <div className="mb-2 text-white/80 font-medium text-sm">xG Difference</div>
+                  <LineChart
+                    data={xgDiffData}
+                    height={90}
+                    color="#3B82F6"
+                    currentValue={
+                      xgDiffData.length
+                        ? xgDiffData.reduce((sum, d) => sum + d.value, 0) / xgDiffData.length
+                        : undefined
+                    }
+                    currentValueLabel="Overall avg"
+                  />
+                </motion.div>
+                {/* Progressive Pass Success Difference */}
+                <motion.div className="stat-panel p-4 relative overflow-hidden flex-1 min-h-[120px]">
+                  <div className="mb-2 text-white/80 font-medium text-sm">Progressive Pass Success Diff</div>
+                  <LineChart
+                    data={progPassDiffData}
+                    height={90}
+                    color="#F59E42"
+                    currentValue={
+                      progPassDiffData.length
+                        ? progPassDiffData.reduce((sum, d) => sum + d.value, 0) / progPassDiffData.length
+                        : undefined
+                    }
+                    currentValueLabel="Overall avg"
+                  />
+                </motion.div>
+                {/* xG Performance */}
+                <motion.div className="stat-panel p-4 relative overflow-hidden flex-1 min-h-[120px]">
+                  <div className="mb-2 text-white/80 font-medium text-sm">xG Performance</div>
+                  <LineChart
+                    data={xgPerfData}
+                    height={90}
+                    color="#EF4444"
+                    currentValue={
+                      xgPerfData.length
+                        ? xgPerfData.reduce((sum, d) => sum + d.value, 0) / xgPerfData.length
+                        : undefined
+                    }
+                    currentValueLabel=""
+                  />
+                </motion.div>
+              </div>
             </div>
           </motion.div>
         )}
