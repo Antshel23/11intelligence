@@ -79,7 +79,7 @@ export function StackedBarChart({ data, height }: StackedBarChartProps) {
                       width: `${dorkingPercentage}%`
                     }}
                   >
-                    {item.dorking.toFixed(1)}
+                    {item.dorking}
                   </div>
                 )}
                 {oppositionPercentage > 0 && (
@@ -90,7 +90,7 @@ export function StackedBarChart({ data, height }: StackedBarChartProps) {
                       width: `${oppositionPercentage}%`
                     }}
                   >
-                    {item.opposition.toFixed(1)}
+                    {item.opposition}
                   </div>
                 )}
               </div>

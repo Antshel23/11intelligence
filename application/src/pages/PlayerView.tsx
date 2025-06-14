@@ -46,7 +46,7 @@ function PlayerView() {
   }
 
   return (
-    <div className="flex flex-col space-y-8 relative z-10">
+    <div className="flex flex-col space-y-6 p-6 relative" style={{ zIndex: 1 }}>
       <AnimatePresence mode="wait">
         {isLoading ? (
           <motion.div
@@ -68,7 +68,7 @@ function PlayerView() {
           </motion.div>
         ) : (
           <motion.div 
-            className="flex flex-col space-y-8 relative z-10"
+            className="flex flex-col space-y-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -76,39 +76,48 @@ function PlayerView() {
 
             {/* Header Panel */}
             <motion.div 
-              className="stat-panel p-2.5 relative z-20"
+              className="stat-panel p-4 relative overflow-hidden"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
+              style={{ zIndex: 1000 }}
             >
-              {/* Single Row Layout */}
-              <div className="flex items-center justify-between">
-                {/* Left Side - Logo and Player Name */}
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-transparent to-blue-500/10 pointer-events-none" />
+              
+              <div className="flex items-center justify-between relative z-10">
+                {/* Left Side - Logo and Title */}
                 <div className="flex items-center">
-                  <div className="h-16 w-16 mr-6 bg-white/10 rounded-full flex items-center justify-center">
-                    {selectedPlayer ? (
-                      <span className="text-2xl font-bold text-white/90">
-                        {selectedPlayer.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    ) : (
-                      <span className="text-white/50 text-sm">Select</span>
-                    )}
-                  </div>
+                  <img 
+                    src="/TUFC.png" 
+                    alt="Team Logo" 
+                    className="h-16 w-16 mr-6"
+                  />
                   <div>
                     <div className="text-2xl font-medium text-[#EFEFEF]">
-                      {selectedPlayer?.name || 'Select a player'}
+                      Player Analysis
                     </div>
-                    {selectedPlayer && (
-                      <div className="text-sm text-white/70 mt-1">
-                        {selectedPlayer.position} • {selectedPlayer.team} • {selectedPlayer.season}
-                      </div>
-                    )}
+                    <div className="text-sm text-white/60">
+                      Position-Specific Performance Profile
+                    </div>
                   </div>
                 </div>
 
+                {/* Center - Player Info */}
+                {selectedPlayer && (
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="text-center">
+                      <div className="text-lg font-medium text-[#EFEFEF]">
+                        {selectedPlayer.name}
+                      </div>
+                      <div className="text-sm text-white/60">
+                        {selectedPlayer.position} • {selectedPlayer.team}
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Right Side - Player Selector */}
-                <div className="relative z-30">
+                <div style={{ zIndex: 999999 }}>
                   <PlayerSelector 
                     selectedPlayer={selectedPlayer}
                     onPlayerChange={setSelectedPlayer}
@@ -118,32 +127,48 @@ function PlayerView() {
               </div>
             </motion.div>
 
-            {/* Stat Panel */}
+            {/* Main Content Panel */}
             {selectedPlayer ? (
               <motion.div 
-                className="stat-panel p-8 relative z-10"
+                className="stat-panel p-5 relative overflow-hidden"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
+                style={{ minHeight: '700px', zIndex: 100 }}
               >
-                <RadarChart
-                  data={getRadarData()}
-                  height={500}
-                />
+                <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
+                <div className="mb-4 relative z-10">
+                  <h3 className="text-lg font-medium text-white/90">
+                    Performance Radar
+                  </h3>
+                  <div className="text-sm text-white/60 mt-1">
+                    Percentile rankings vs {getPositionCategory(selectedPlayer.position)} players
+                  </div>
+                </div>
+                <div className="relative z-10 flex justify-center">
+                  <RadarChart
+                    data={getRadarData()}
+                    height={500}
+                  />
+                </div>
               </motion.div>
             ) : (
               <motion.div 
-                className="stat-panel p-8 text-center relative z-10"
+                className="stat-panel p-5 relative overflow-hidden flex items-center justify-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
+                style={{ minHeight: '700px', zIndex: 100 }}
               >
-                <h3 className="text-xl font-medium text-white/90 mb-4">
-                  Player Analysis
-                </h3>
-                <p className="text-white/70">
-                  Select a player to view their position-specific performance metrics
-                </p>
+                <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
+                <div className="text-center relative z-10">
+                  <h3 className="text-xl font-medium text-white/90 mb-4">
+                    Select a Player
+                  </h3>
+                  <p className="text-white/70">
+                    Choose a player to view their position-specific performance metrics and radar chart
+                  </p>
+                </div>
               </motion.div>
             )}
           </motion.div>

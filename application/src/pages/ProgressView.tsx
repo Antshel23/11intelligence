@@ -95,99 +95,113 @@ function ProgressView() {
     return (defDuels / oppPasses) / totalIntensity*100
   }
 
-  // Final Third Section
-  const getFinalThirdStats = () => {
-    if (!selectedMatchData) return []
-    const dorkingBoxEntries = getBoxEntries(selectedMatchData, "Dorking Wanderers")
-    const oppBoxEntries = getBoxEntries(selectedMatchData, "Opposition")
-    return [
-      {
-        name: "xG",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "xG"),
-        opposition: getOppositionValue(selectedMatchData, "xG")
-      },
-      {
-        name: "xG per box entry",
-        dorking: dorkingBoxEntries ? getValue(selectedMatchData, "Dorking Wanderers", "xG") / dorkingBoxEntries : 0,
-        opposition: oppBoxEntries ? getOppositionValue(selectedMatchData, "xG") / oppBoxEntries : 0
-      },
+// Final Third Section
+const getFinalThirdStats = () => {
+  if (!selectedMatchData) return []
+  const dorkingBoxEntries = getBoxEntries(selectedMatchData, "Dorking Wanderers")
+  const oppBoxEntries = getBoxEntries(selectedMatchData, "Opposition")
+  return [
+    {
+      name: "xG",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "xG") * 10) / 10,
+      opposition: Math.round(getOppositionValue(selectedMatchData, "xG") * 10) / 10
+    },
+    {
+      name: "xG per box entry (chance quality)",
+      dorking: dorkingBoxEntries ? Math.round((getValue(selectedMatchData, "Dorking Wanderers", "xG") / dorkingBoxEntries) * 100) / 100 : 0,
+      opposition: oppBoxEntries ? Math.round((getOppositionValue(selectedMatchData, "xG") / oppBoxEntries) * 100) / 100 : 0
+    },
+    {
+      name: "Open play shots",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Positional attacks leading to shot")),
+      opposition: Math.round(getOppositionValue(selectedMatchData, "Positional attacks leading to shot"))
+    },
+    {
+      name: "Open play box entries",
+      dorking: Math.round(dorkingBoxEntries),
+      opposition: Math.round(oppBoxEntries)
+    },
+    {
+      name: "Box entry via cross",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Box entry via cross")),
+      opposition: Math.round(getOppositionValue(selectedMatchData, "Box entry via cross"))
+    },
+    {
+      name: "Box entry via run",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Box entry via run")),
+      opposition: Math.round(getOppositionValue(selectedMatchData, "Box entry via run"))
+    },
+    {
+      name: "Box entry via ground pass or through ball",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Deep completed passes")),
+      opposition: Math.round(getOppositionValue(selectedMatchData, "Deep completed passes"))
+    }
+  ]
+}
 
-      {
-        name: "Open play shots",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Positional attacks leading to shot"),
-        opposition: getOppositionValue(selectedMatchData, "Positional attacks leading to shot")
-      },
-      {
-        name: "Box entries",
-        dorking: dorkingBoxEntries,
-        opposition: oppBoxEntries
-      },
-      {
-        name: "Box entry via cross",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Box entry via cross"),
-        opposition: getOppositionValue(selectedMatchData, "Box entry via cross")
-      },
-      {
-        name: "Box entry via run",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Box entry via run"),
-        opposition: getOppositionValue(selectedMatchData, "Box entry via run")
-      },
-      {
-        name: "Deep completed passes",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Deep completed passes"),
-        opposition: getOppositionValue(selectedMatchData, "Deep completed passes")
-      }
-    ]
-  }
+// Progression Section
+const getProgressionStats = () => {
+  if (!selectedMatchData) return []
+  return [
+    {
+      name: "Possession",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Possession") * 10) / 10,
+      opposition: Math.round(getOppositionValue(selectedMatchData, "Possession") * 10) / 10
+    },
+    {
+      name: "Def/Mid 3rd progression success %",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Progressive pass success %")),
+      opposition: Math.round(getOppositionValue(selectedMatchData, "Progressive pass success %"))
+    },
+    {
+      name: "Final 3rd progression success %",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Final third pass success %")),
+      opposition: Math.round(getOppositionValue(selectedMatchData, "Final third pass success %"))
+    },
+    {
+      name: "Final 3rd entries",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Successful final third passes")),
+      opposition: Math.round(getOppositionValue(selectedMatchData, "Successful final third passes"))
+    },
+    {
+      name: "Open play attacks",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Total positional attacks")),
+      opposition: Math.round(getOppositionValue(selectedMatchData, "Total positional attacks"))
+    },
+  ]
+}
 
-  // Progression Section
-  const getProgressionStats = () => {
-    if (!selectedMatchData) return []
-    return [
-      {
-        name: "Possession %",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Possession"),
-        opposition: getOppositionValue(selectedMatchData, "Possession")
-      },
-      {
-        name: "Progressive pass success %",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Progressive pass success %"),
-        opposition: getOppositionValue(selectedMatchData, "Progressive pass success %")
-      },
-      {
-        name: "Total final third entries",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Successful final third passes"),
-        opposition: getOppositionValue(selectedMatchData, "Successful final third passes")
-      },
-      {
-        name: "Open play attacks",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Total positional attacks"),
-        opposition: getOppositionValue(selectedMatchData, "Total positional attacks")
-      },
-    ]
-  }
-
-  // Press Section
-  const getPressStats = () => {
-    if (!selectedMatchData) return []
-    return [
-      {
-        name: "High regains",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "High recoveries"),
-        opposition: getOppositionValue(selectedMatchData, "High recoveries")
-      },
-      {
-        name: "Def duel success %",
-        dorking: getValue(selectedMatchData, "Dorking Wanderers", "Def duel success %"),
-        opposition: getOppositionValue(selectedMatchData, "Def duel success %")
-      },
-      {
-        name: "Intensity",
-        dorking: getIntensity(selectedMatchData, "Dorking Wanderers", "Opposition"),
-        opposition: getIntensity(selectedMatchData, "Opposition", "Dorking Wanderers")
-      }
-    ]
-  }
+// Press Section
+const getPressStats = () => {
+  if (!selectedMatchData) return []
+  return [
+    {
+      name: "Press Intensity",
+      dorking: Math.round(getIntensity(selectedMatchData, "Dorking Wanderers", "Opposition")),
+      opposition: Math.round(getIntensity(selectedMatchData, "Opposition", "Dorking Wanderers"))
+    },
+    {
+      name: "High regains",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "High recoveries")),
+      opposition: Math.round(getOppositionValue(selectedMatchData, "High recoveries"))
+    },
+    {
+      name: "Mid regains",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Med recoveries")),
+      opposition: Math.round(getOppositionValue(selectedMatchData, "Med recoveries"))
+    },
+    {
+      name: "Def duel success %",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Def duel success %")),
+      opposition: Math.round(getOppositionValue(selectedMatchData, "Def duel success %"))
+    },
+    {
+      name: "Aerial duel success %",
+      dorking: Math.round(getValue(selectedMatchData, "Dorking Wanderers", "Aerial duel success %")),
+      opposition: Math.round(getValue(selectedMatchData, "Opposition", "Aerial duel success %"))
+    }
+  ]
+}
 
   return (
     <div className="flex flex-col space-y-6 p-6 relative" style={{ zIndex: 1 }}>

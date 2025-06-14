@@ -154,13 +154,20 @@ function OppositionView() {
 
   const getSectionRating = (metrics: any[]) => {
     if (!metrics.length) return 0
-    return Math.round(
-      metrics.reduce((acc, metric) => acc + metric.percentile, 0) / metrics.length
-    )
+    const percentiles = metrics.map(metric => metric.percentile).sort((a, b) => a - b)
+    const middle = Math.floor(percentiles.length / 2)
+    
+    if (percentiles.length % 2 === 0) {
+      // Even number of metrics - average of two middle values
+      return Math.round((percentiles[middle - 1] + percentiles[middle]) / 2)
+    } else {
+      // Odd number of metrics - middle value
+      return Math.round(percentiles[middle])
+    }
   }
 
   return (
-    <div className="flex flex-col space-y-6 p-6">
+    <div className="flex flex-col space-y-6 p-6 relative" style={{ zIndex: 1 }}>
       <AnimatePresence mode="wait">
         {isLoading ? (
           <motion.div
@@ -194,21 +201,25 @@ function OppositionView() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
+              style={{ zIndex: 10000 }}
             >
-              {/* Background gradient effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-blue-500/10 pointer-events-none" />
               
-              {/* Single Row Layout */}
               <div className="flex items-center justify-between relative z-10">
-                {/* Left Side - Logo and Team Name */}
+                {/* Left Side - Logo and Title */}
                 <div className="flex items-center">
                   <img 
                     src="/TUFC.png" 
                     alt="Team Logo" 
                     className="h-16 w-16 mr-6"
                   />
-                  <div className="text-2xl font-medium text-[#EFEFEF]">
-                    {selectedTeam || 'Select a team'}
+                  <div>
+                    <div className="text-2xl font-medium text-[#EFEFEF]">
+                      {selectedTeam}
+                    </div>
+                    <div className="text-sm text-white/60">
+                      Data Profile in all phases of play
+                    </div>
                   </div>
                 </div>
 
@@ -216,7 +227,7 @@ function OppositionView() {
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center space-x-8">
                   {Object.entries(sections).map(([key, section]) => (
                     <div key={key} className="flex flex-col items-center">
-                      <div className="h-10 w-20 mb--1">
+                      <div className="h-10 w-20 mb-1">
                         <GaugeChart 
                           value={getSectionRating(section.metrics)}
                           title=""
@@ -224,7 +235,7 @@ function OppositionView() {
                           className="w-full h-full text-center"
                         />
                       </div>
-                      <div className="text-xs text-[#EFEFEF] text-center">
+                      <div className="text-xs text-[#EFEFEF] text-center mt-">
                         {section.title}
                       </div>
                     </div>
@@ -232,11 +243,13 @@ function OppositionView() {
                 </div>
 
                 {/* Right Side - Team Selector */}
-                <TeamSelector 
-                  selectedTeam={selectedTeam}
-                  onTeamChange={setSelectedTeam}
-                  teams={teams}
-                />
+                <div style={{ zIndex: 10001 }}>
+                  <TeamSelector 
+                    selectedTeam={selectedTeam}
+                    onTeamChange={setSelectedTeam}
+                    teams={teams}
+                  />
+                </div>
               </div>
             </motion.div>
 
