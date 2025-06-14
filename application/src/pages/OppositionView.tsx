@@ -235,7 +235,7 @@ function OppositionView() {
                           className="w-full h-full text-center"
                         />
                       </div>
-                      <div className="text-xs text-[#EFEFEF] text-center mt-">
+                      <div className="text-xs text-[#EFEFEF] text-center mt-1">
                         {section.title}
                       </div>
                     </div>
@@ -255,40 +255,32 @@ function OppositionView() {
 
             {/* Stat Panels Grid */}
             <div className="grid grid-cols-2 gap-6">
-              {Object.entries(sections).map(([key, section], index) => (
-                <motion.div 
-                  key={key}
-                  className="stat-panel p-5 relative overflow-hidden"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  {/* Section-specific background gradient */}
-                  <div 
-                    className="absolute inset-0 opacity-10 pointer-events-none"
-                    style={{ background: `linear-gradient(135deg, ${section.color}30, transparent 70%)` }}
-                  />
-                  {/* Secondary gradient layer for more depth */}
-                  <div 
-                    className="absolute inset-0 opacity-5 pointer-events-none"
-                    style={{ background: `radial-gradient(circle at top right, ${section.color}40, transparent 50%)` }}
-                  />
-                  
-                  <div className="mb-4 relative z-10">
-                    <h3 className="text-lg font-medium text-white/90">
-                      {section.title}
-                    </h3>
-                  </div>
-                  <div className="relative z-10">
-                    <BarChart
-                      data={section.metrics}
-                      color={section.color}
-                      height={240}
-                    />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+  {Object.entries(sections).map(([key, section], index) => (
+    <motion.div 
+      key={key}
+      className="stat-panel p-5 relative overflow-hidden"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      style={{ minHeight: '280px' }}
+    >
+      <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
+      
+      <div className="mb-4 relative z-10">
+        <h3 className="text-lg font-medium text-white/90">
+          {section.title}
+        </h3>
+      </div>
+      <div className="relative z-10">
+        <BarChart
+          data={section.metrics}
+          color={section.color}
+          height={180}
+        />
+      </div>
+    </motion.div>
+  ))}
+</div>
           </motion.div>
         )}
       </AnimatePresence>

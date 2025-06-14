@@ -25,7 +25,6 @@ export function RadarChart({ data, height = 700 }: RadarChartProps) {
       {/* Header */}
       <div className="mb-6">
         <h3 className="text-xl font-medium text-white/90 text-center">Performance Metrics</h3>
-        <p className="text-sm text-white/60 text-center">Percentile rankings compared to players in same position (0-100)</p>
       </div>
       
       {/* Bar Chart - Full Width */}
@@ -57,32 +56,6 @@ export function RadarChart({ data, height = 700 }: RadarChartProps) {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Color legend */}
-      <div className="mt-6 pt-4 border-t border-white/10">
-        <div className="flex justify-center items-center space-x-8 text-sm">
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded bg-[#ef4444]"></div>
-            <span className="text-white/70">Poor (0-20)</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded bg-[#f97316]"></div>
-            <span className="text-white/70">Below Avg (20-40)</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded bg-[#eab308]"></div>
-            <span className="text-white/70">Average (40-60)</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded bg-[#84cc16]"></div>
-            <span className="text-white/70">Good (60-80)</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded bg-[#22c55e]"></div>
-            <span className="text-white/70">Excellent (80-100)</span>
-          </div>
-        </div>
       </div>
     </div>
   )
