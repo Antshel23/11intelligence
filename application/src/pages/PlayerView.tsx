@@ -47,8 +47,8 @@ const STAT_DISPLAY_NAMES = {
   "Aerial duels won, %": "Aerial Success",
   "xA per 90": "Expected Assists",
   "xG per 90": "Expected Goals",
-  "xA/shot assist": "Chance Quality Created",
-  "xG/shot": "Chance Quality",
+  "xA/shot assist": "Avg Chance Qual Made",
+  "xG/shot": "Avg Chance Qual",
   "Through passes per 90": "Through Balls",
   "Progressive runs per 90": "Prog Carries",
   "Successful dribbles per 90": "Successful Dribbles",
@@ -116,9 +116,9 @@ function PlayerView() {
     const positionMap: { [key: string]: keyof typeof PANEL_STATS } = {
       'CB': 'CB', 'LCB': 'CB', 'RCB': 'CB',
       'FB': 'FB', 'LB': 'FB', 'RB': 'FB', 'LWB': 'FB', 'RWB': 'FB',
-      'CM': 'CM', 'CDM': 'CM', 'CAM': 'CM',
-      'LM': 'WIDE', 'RM': 'WIDE', 'LW': 'WIDE', 'RW': 'WIDE',
-      'ST': 'FW', 'CF': 'FW', 'LF': 'FW', 'RF': 'FW'
+      'MF': 'CM', 'CDM': 'CM', 'CAM': 'CM',
+      'WIDE': 'WIDE', 'RM': 'WIDE', 'LW': 'WIDE', 'RW': 'WIDE',
+      'FW': 'FW', 'CF': 'FW', 'LF': 'FW', 'RF': 'FW'
     }
     return positionMap[position.toUpperCase()] || 'CM'
   }
@@ -222,120 +222,121 @@ function PlayerView() {
               </div>
             </motion.div>
 
-            {/* Four Stat Panels in 2x2 Grid */}
-            {selectedPlayer ? (
-              <div className="grid grid-cols-2 gap-6">
-                {/* Panel 1 - Top Left */}
-                <motion.div 
-                  className="stat-panel p-5 relative overflow-hidden"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                  style={{ minHeight: '350px' }}
-                >
-                  <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-red-500 to-transparent" />
-                  <div className="mb-4 relative z-10">
-                    <h3 className="text-lg font-medium text-white/90">
-                      {getPanelTitles(selectedPlayer.position).panel1}
-                    </h3>
-                  </div>
-                  <div className="relative z-10">
-                    <BarChart
-                      data={getStatData(getPanelStats(selectedPlayer.position, 'panel1'))}
-                      color="#EF4444"
-                      height={240}
-                    />
-                  </div>
-                </motion.div>
+{/* Four Stat Panels in 2x2 Grid */}
+{selectedPlayer ? (
+  <div className="grid grid-cols-2 gap-6">
+    {/* Panel 1 - Top Left */}
+    <motion.div 
+      className="stat-panel p-5 relative overflow-hidden"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      style={{ minHeight: '280px' }}
+    >
+      <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-red-500 to-transparent" />
+      <div className="mb-4 relative z-10">
+        <h3 className="text-lg font-medium text-white/90">
+          {getPanelTitles(selectedPlayer.position).panel1}
+        </h3>
+      </div>
+      <div className="relative z-10">
+        <BarChart
+          data={getStatData(getPanelStats(selectedPlayer.position, 'panel1'))}
+          color="#EF4444"
+          height={180}
+        />
+      </div>
+    </motion.div>
 
-                {/* Panel 2 - Top Right */}
-                <motion.div 
-                  className="stat-panel p-5 relative overflow-hidden"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  style={{ minHeight: '350px' }}
-                >
-                  <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-blue-500 to-transparent" />
-                  <div className="mb-4 relative z-10">
-                    <h3 className="text-lg font-medium text-white/90">
-                      {getPanelTitles(selectedPlayer.position).panel2}
-                    </h3>
-                  </div>
-                  <div className="relative z-10">
-                    <BarChart
-                      data={getStatData(getPanelStats(selectedPlayer.position, 'panel2'))}
-                      color="#3B82F6"
-                      height={240}
-                    />
-                  </div>
-                </motion.div>
+    {/* Panel 2 - Top Right */}
+    <motion.div 
+      className="stat-panel p-5 relative overflow-hidden"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      style={{ minHeight: '280px' }}
+    >
+      <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-blue-500 to-transparent" />
+      <div className="mb-4 relative z-10">
+        <h3 className="text-lg font-medium text-white/90">
+          {getPanelTitles(selectedPlayer.position).panel2}
+        </h3>
+      </div>
+      <div className="relative z-10">
+        <BarChart
+          data={getStatData(getPanelStats(selectedPlayer.position, 'panel2'))}
+          color="#3B82F6"
+          height={180}
+        />
+      </div>
+    </motion.div>
 
-                {/* Panel 3 - Bottom Left */}
-                <motion.div 
-                  className="stat-panel p-5 relative overflow-hidden"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  style={{ minHeight: '350px' }}
-                >
-                  <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-green-500 to-transparent" />
-                  <div className="mb-4 relative z-10">
-                    <h3 className="text-lg font-medium text-white/90">
-                      {getPanelTitles(selectedPlayer.position).panel3}
-                    </h3>
-                  </div>
-                  <div className="relative z-10">
-                    <BarChart
-                      data={getStatData(getPanelStats(selectedPlayer.position, 'panel3'))}
-                      color="#10B981"
-                      height={240}
-                    />
-                  </div>
-                </motion.div>
+    {/* Panel 3 - Bottom Left */}
+    <motion.div 
+      className="stat-panel p-5 relative overflow-hidden"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.3 }}
+      style={{ minHeight: '280px' }}
+    >
+      <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-green-500 to-transparent" />
+      <div className="mb-4 relative z-10">
+        <h3 className="text-lg font-medium text-white/90">
+          {getPanelTitles(selectedPlayer.position).panel3}
+        </h3>
+      </div>
+      <div className="relative z-10">
+        <BarChart
+          data={getStatData(getPanelStats(selectedPlayer.position, 'panel3'))}
+          color="#10B981"
+          height={180}
+        />
+      </div>
+    </motion.div>
 
-                {/* Panel 4 - Bottom Right */}
-                <motion.div 
-                  className="stat-panel p-5 relative overflow-hidden"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  style={{ minHeight: '350px' }}
-                >
-                  <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
-                  <div className="mb-4 relative z-10">
-                    <h3 className="text-lg font-medium text-white/90">
-                      {getPanelTitles(selectedPlayer.position).panel4}
-                    </h3>
-                  </div>
-                  <div className="relative z-10">
-                    <BarChart
-                      data={getStatData(getPanelStats(selectedPlayer.position, 'panel4'))}
-                      color="#8B5CF6"
-                      height={240}
-                    />
-                  </div>
-                </motion.div>
-              </div>
-            ) : (
-              <motion.div 
-                className="stat-panel p-5 relative overflow-hidden flex items-center justify-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                style={{ minHeight: '700px', zIndex: 100 }}
-              >
-                <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
-                <div className="text-center relative z-10">
-                  <h3 className="text-xl font-medium text-white/90 mb-4">
-                    Select a Player
-                  </h3>
-                  <p className="text-white/70">
-                    Choose a player to view their position-specific performance metrics
-                  </p>
-                </div>
-              </motion.div>
-            )}
+    {/* Panel 4 - Bottom Right */}
+    <motion.div 
+      className="stat-panel p-5 relative overflow-hidden"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+      style={{ minHeight: '280px' }}
+    >
+      <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
+      <div className="mb-4 relative z-10">
+        <h3 className="text-lg font-medium text-white/90">
+          {getPanelTitles(selectedPlayer.position).panel4}
+        </h3>
+      </div>
+      <div className="relative z-10">
+        <BarChart
+          data={getStatData(getPanelStats(selectedPlayer.position, 'panel4'))}
+          color="#8B5CF6"
+          height={180}
+        />
+      </div>
+    </motion.div>
+  </div>
+) : (
+  <motion.div 
+    className="stat-panel p-5 relative overflow-hidden flex items-center justify-center"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: 0.1 }}
+    style={{ minHeight: '580px', zIndex: 100 }}
+  >
+    <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
+    <div className="text-center relative z-10">
+      <h3 className="text-xl font-medium text-white/90 mb-4">
+        Select a Player
+      </h3>
+      <p className="text-white/70">
+        Choose a player to view their position-specific performance metrics
+      </p>
+    </div>
+  </motion.div>
+)}
+
           </motion.div>
         )}
       </AnimatePresence>

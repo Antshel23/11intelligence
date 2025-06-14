@@ -209,7 +209,7 @@ function OppositionView() {
                 {/* Left Side - Logo and Title */}
                 <div className="flex items-center">
                   <img 
-                    src="/TUFC.png" 
+                    src={`league/${selectedTeam}.png`} 
                     alt="Team Logo" 
                     className="h-16 w-16 mr-6"
                   />
