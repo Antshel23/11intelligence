@@ -19,7 +19,7 @@ const PANEL_STATS = {
     panel3: ["Progressive runs per 90", "Successful dribbles per 90", "Progressive passes per 90", "Passes to final third per 90"],
     panel4: ["Accurate progressive passes, %", "Accurate passes to final third, %", "Accurate long passes, %", "Accurate short / medium passes, %"]
   },
-  'MF': {
+  'CM': {
     panel1: ["Defensive duels won, %", "Successful defensive actions per 90", "PAdj Interceptions", "Aerial duels won, %"],
     panel2: ["xA per 90", "xG per 90", "Deep completions per 90", "Shot assists per 90"],
     panel3: ["Progressive passes per 90", "Passes to final third per 90", "Accurate progressive passes, %", "Accurate passes to final third, %"],
@@ -88,7 +88,7 @@ function PlayerView() {
         panel3: "Progression",
         panel4: "Passing"
       },
-      'MF': {
+      'CM': {
         panel1: "Defensive",
         panel2: "Final Third",
         panel3: "Deep Progression",
@@ -108,7 +108,7 @@ function PlayerView() {
       }
     }
     
-    return panelTitles[category] || panelTitles['CM']
+    return panelTitles[category] || panelTitles['MF']
   }
 
   // Get position-specific stats
@@ -116,7 +116,7 @@ function PlayerView() {
     const positionMap: { [key: string]: keyof typeof PANEL_STATS } = {
       'CB': 'CB', 'LCB': 'CB', 'RCB': 'CB',
       'FB': 'FB', 'LB': 'FB', 'RB': 'FB', 'LWB': 'FB', 'RWB': 'FB',
-      'MF': 'CM', 'CDM': 'CM', 'CAM': 'CM',
+      'CM': 'CM', 'CDM': 'CM', 'CAM': 'CM',
       'WIDE': 'WIDE', 'RM': 'WIDE', 'LW': 'WIDE', 'RW': 'WIDE',
       'FW': 'FW', 'CF': 'FW', 'LF': 'FW', 'RF': 'FW'
     }
