@@ -1,5 +1,3 @@
-import type { MatchData } from '../../types'
-
 export const processMatchData = async (): Promise<MatchData[]> => {
   try {
     const response = await fetch('/src/utils/data/match_data.json');

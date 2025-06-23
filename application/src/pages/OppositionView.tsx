@@ -2,11 +2,14 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { BarChart } from '../components/charts/BarChart'
 import { GaugeChart } from '../components/charts/GaugeChart'
 import { useTeamData } from '../hooks/data/useTeamData'
+import { useLineupData } from '../hooks/data/useLineupData'
 import { getValue, getPercentileRank } from '../utils/processors/teamDataProcessor'
 import { TeamSelector } from '../components/common/TeamSelector'
+import { Pitch } from '../components/common/Pitch'
 
 function OppositionView() {
   const { data, selectedTeam, setSelectedTeam, isLoading, error, teams } = useTeamData()
+  const { matches: lineupMatches, isLoading: lineupLoading, error: lineupError } = useLineupData(selectedTeam)
 
   const selectedTeamData = data.find(d => d.team === selectedTeam)
 
@@ -166,6 +169,13 @@ function OppositionView() {
     }
   }
 
+  const formatMatchDate = (timestamp: number): string => {
+    return new Date(timestamp * 1000).toLocaleDateString('en-GB', { 
+      day: 'numeric', 
+      month: 'short' 
+    })
+  }
+
   return (
     <div className="flex flex-col space-y-6 p-6 relative" style={{ zIndex: 1 }}>
       <AnimatePresence mode="wait">
@@ -253,34 +263,81 @@ function OppositionView() {
               </div>
             </motion.div>
 
+            {/* Lineup Container */}
+            <motion.div 
+              className="stat-panel p-5 relative overflow-hidden"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
+              
+              <div className="mb-4 relative z-10">
+                <h3 className="text-lg font-medium text-white/90">
+                  Recent Formations & Average Positions
+                </h3>
+                <p className="text-sm text-white/60">
+                  Last 5 matches showing starter positions
+                </p>
+              </div>
+              
+              <div className="relative z-10">
+                {lineupLoading ? (
+                  <div className="flex items-center justify-center h-64">
+                    <div className="text-white/60">Loading lineups...</div>
+                  </div>
+                ) : lineupError ? (
+                  <div className="flex items-center justify-center h-64">
+                    <div className="text-red-400">Error loading lineups</div>
+                  </div>
+                ) : lineupMatches.length === 0 ? (
+                  <div className="flex items-center justify-center h-64">
+                    <div className="text-white/60">No lineup data available</div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-5 gap-4">
+                    {lineupMatches.slice(0, 5).map((match, index) => (
+                      <div key={match.matchId} className="flex justify-center">
+                        <Pitch 
+                          starters={match.starters}
+                          matchTitle={`vs ${match.isHome ? match.awayTeam : match.homeTeam}`}
+                          matchDate={formatMatchDate(match.startTimestamp)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+
             {/* Stat Panels Grid */}
             <div className="grid grid-cols-2 gap-6">
-  {Object.entries(sections).map(([key, section], index) => (
-    <motion.div 
-      key={key}
-      className="stat-panel p-5 relative overflow-hidden"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      style={{ minHeight: '280px' }}
-    >
-      <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
-      
-      <div className="mb-4 relative z-10">
-        <h3 className="text-lg font-medium text-white/90">
-          {section.title}
-        </h3>
-      </div>
-      <div className="relative z-10">
-        <BarChart
-          data={section.metrics}
-          color={section.color}
-          height={180}
-        />
-      </div>
-    </motion.div>
-  ))}
-</div>
+              {Object.entries(sections).map(([key, section], index) => (
+                <motion.div 
+                  key={key}
+                  className="stat-panel p-5 relative overflow-hidden"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: (index + 2) * 0.1 }}
+                  style={{ minHeight: '280px' }}
+                >
+                  <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
+                  
+                  <div className="mb-4 relative z-10">
+                    <h3 className="text-lg font-medium text-white/90">
+                      {section.title}
+                    </h3>
+                  </div>
+                  <div className="relative z-10">
+                    <BarChart
+                      data={section.metrics}
+                      color={section.color}
+                      height={180}
+                    />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -40,7 +40,7 @@ export interface Player {
 }
 
 // Match/Progress-related types - PLACEHOLDER
-export interface MatchStats {
+export interface MatchData {
   matchId: string;
   date: string;
   homeTeam: string;
@@ -62,6 +62,55 @@ export interface ChartSection {
   title: string;
   color: string;
   metrics: ChartMetric[];
+}
+
+export interface LineupData {
+  league: string;
+  season: string;
+  collection_timestamp: number;
+  total_teams: number;
+  teams: TeamLineup[];
+}
+
+export interface TeamLineup {
+  team_name: string;
+  team_slug: string;
+  team_id: number;
+  league_position: number;
+  last_5_matches: MatchData[];
+}
+
+export interface MatchData {
+  id: number;
+  slug: string;
+  customId: string;
+  homeTeam: string;
+  awayTeam: string;
+  startTimestamp: number;
+  players: {
+    home: PlayerPosition[];
+    away: PlayerPosition[];
+  } | null;
+}
+
+export interface PlayerPosition {
+  surname: string;
+  full_name: string;
+  id: number;
+  jersey_number: string;
+  position: string;
+  averageX: number;
+  averageY: number;
+  started: boolean;
+}
+
+export interface MatchLineup {
+  matchId: number;
+  homeTeam: string;
+  awayTeam: string;
+  startTimestamp: number;
+  isHome: boolean;
+  starters: PlayerPosition[];
 }
 
 export type TabId = 'opposition' | 'player' | 'squad' | 'progress';
