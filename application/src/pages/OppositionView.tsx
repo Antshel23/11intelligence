@@ -228,7 +228,7 @@ function OppositionView() {
                       {selectedTeam}
                     </div>
                     <div className="text-sm text-white/60">
-                      Data Profile in all phases of play
+                      Opposition Profile
                     </div>
                   </div>
                 </div>
