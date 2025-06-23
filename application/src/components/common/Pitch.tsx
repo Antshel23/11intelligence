@@ -18,6 +18,9 @@ export const Pitch: React.FC<PitchProps> = ({ starters, matchTitle, matchDate })
     return Math.max(10, Math.min(90, spreadValue))
   }
 
+  // Filter out goalkeepers (position 'G')
+  const outfieldPlayers = starters.filter(player => player.position !== 'G')
+
   return (
     <div className="flex flex-col h-full w-full">
       {/* Match Info */}
@@ -146,32 +149,33 @@ export const Pitch: React.FC<PitchProps> = ({ starters, matchTitle, matchDate })
           />
         </svg>
 
-        {/* Players */}
-        {starters.map((player) => {
+        {/* Players (excluding goalkeepers) */}
+        {outfieldPlayers.map((player) => {
           // Flip both X and Y axes to correct the coordinate system
           const flippedX = player.averageX  // Flip X-axis
           const flippedY = 100 - player.averageY  // Flip Y-axis
           
           // Apply spread to coordinates for better visibility
-          const xPercent = spreadPosition(flippedX, 50, 1.5) // Horizontal spread
+          const xPercent = spreadPosition(flippedX, 50, 1.4) // Horizontal spread
           const yPercent = spreadPosition(flippedY, 50, 1.2) // Vertical spread (less aggressive)
 
           return (
             <div
               key={player.id}
-              className="absolute transform -translate-x-1/2 -translate-y-1/2"
+              className="absolute"
               style={{ 
                 left: `${xPercent}%`, 
-                top: `${yPercent}%` 
+                top: `${yPercent}%`,
+                transform: 'translate(-50%, -50%)' // Center both X and Y
               }}
             >
-              {/* Player Name Above Circle */}
-              <div className="text-[9px] text-white/90 text-center mb-0.5 font-medium whitespace-nowrap">
-                {player.surname}
+              {/* Player Name Above Circle - Properly Centered */}
+              <div className="text-[9px] text-white/90 text-center mb-0.5 font-medium whitespace-nowrap w-full flex justify-center">
+                <span>{player.surname}</span>
               </div>
               
               {/* Player Circle with Jersey Number */}
-              <div className="w-3.5 h-3.5 bg-blue-500 border border-white rounded-full flex items-center justify-center">
+              <div className="w-5 h-5 bg-red-500 border border-white rounded-full flex items-center justify-center mx-auto">
                 <span className="text-[7px] font-bold text-white leading-none">
                   {player.jersey_number === "/" ? "?" : player.jersey_number}
                 </span>
