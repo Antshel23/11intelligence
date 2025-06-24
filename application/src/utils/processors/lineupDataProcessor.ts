@@ -2,7 +2,7 @@ import type { LineupData, TeamLineup, MatchLineup, PlayerPosition } from '../../
 
 export const processLineupData = async (): Promise<LineupData> => {
   try {
-    const response = await fetch('/src/utils/data/lineup_data.json');
+    const response = await fetch('data/lineup_data.json');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

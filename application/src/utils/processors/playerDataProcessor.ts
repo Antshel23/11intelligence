@@ -2,7 +2,7 @@ import type { Player } from '../../types'
 
 export const processPlayerData = async (): Promise<Player[]> => {
   try {
-    const response = await fetch('/src/utils/data/player_data.json');
+    const response = await fetch('data/player_data.json');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

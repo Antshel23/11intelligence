@@ -246,7 +246,7 @@ const getPressStats = () => {
                 {/* Left Side - Logo and Title */}
                 <div className="flex items-center">
                   <img 
-                    src="/DWFC.png" 
+                    src="/league_logos/Dorking Wanderers.png" 
                     alt="Team Logo" 
                     className="h-16 w-16 mr-6"
                   />

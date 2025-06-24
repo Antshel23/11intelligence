@@ -2,7 +2,7 @@ import type { TeamStats } from '../../types'
 
 export const processTeamData = async (): Promise<TeamStats[]> => {
   try {
-    const response = await fetch('/src/utils/data/oppo_data.json');
+    const response = await fetch('data/oppo_data.json');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

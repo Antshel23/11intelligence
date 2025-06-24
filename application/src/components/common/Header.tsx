@@ -25,7 +25,7 @@ export function Header({ selectedTab, onTabChange }: HeaderProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <img 
-              src="/image.png" 
+              src="/other_logos/image.png" 
               alt="Logo" 
               className="max-w-[250px] h-auto"
             />

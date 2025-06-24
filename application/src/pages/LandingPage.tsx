@@ -88,7 +88,7 @@ function LandingPage() {
               {/* Logo */}
               <div className="mb-6">
           <img 
-            src="public/league/Dorking Wanderers.png" 
+            src="public/league_logos/Dorking Wanderers.png" 
             alt="Dorking Wanderers FC" 
             className="w-96 h-96 mx-auto object-contain"
           />

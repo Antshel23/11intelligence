@@ -1,6 +1,6 @@
 export const processMatchData = async (): Promise<MatchData[]> => {
   try {
-    const response = await fetch('/src/utils/data/match_data.json');
+    const response = await fetch('data/match_data.json');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

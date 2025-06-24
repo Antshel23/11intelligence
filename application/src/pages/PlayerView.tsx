@@ -352,20 +352,7 @@ const getTableColumns = () => {
               <div className="flex items-center justify-between relative z-10">
                 {/* Left Side - Logo, Title, and Toggle */}
                 <div className="flex items-center space-x-6">
-                  <div className="flex items-center">
-                    <img 
-                      src="/DWFC.png" 
-                      alt="Team Logo" 
-                      className="h-16 w-16 mr-6"
-                    />
                     <div>
-                      <div className="text-2xl font-medium text-[#EFEFEF]">
-                        {view === 'individual' ? 'Player Analysis' : 'Player Comparison'}
-                      </div>
-                      <div className="text-sm text-white/60">
-                        {view === 'individual' ? 'Position-Specific Performance Profile' : 'Multi-Player Statistical Comparison'}
-                      </div>
-                    </div>
                   </div>
                   
                   <ViewToggle view={view} onViewChange={setView} />
