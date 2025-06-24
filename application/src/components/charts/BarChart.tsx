@@ -24,8 +24,8 @@ export function BarChart({ data, color, height = 600 }: BarChartProps) {
   return (
     <div className="w-full flex flex-col">
       
-      {/* Bar Chart - Full Width */}
-      <div className="flex-1 space-y-3 overflow-y-auto max-h-[500px] pr-2">
+      {/* Bar Chart - Dynamic height, no scrollbar */}
+      <div className="flex-1 space-y-3">
         {data.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             {/* Metric name - Right aligned and closer to bars */}

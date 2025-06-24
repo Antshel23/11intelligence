@@ -57,14 +57,6 @@ function AppContent() {
             </main>
           </>
         } />
-        <Route path="/squad" element={
-          <>
-            <Header selectedTab={getSelectedTab()} onTabChange={handleTabChange} />
-            <main className="pt-20 px-8 pb-8">
-              <SquadView />
-            </main>
-          </>
-        } />
         <Route path="/progress" element={
           <>
             <Header selectedTab={getSelectedTab()} onTabChange={handleTabChange} />

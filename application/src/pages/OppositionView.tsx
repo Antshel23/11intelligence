@@ -296,15 +296,28 @@ function OppositionView() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-5 gap-4">
-                    {lineupMatches.slice(0, 5).map((match, index) => (
-                      <div key={match.matchId} className="flex justify-center">
-                        <Pitch 
-                          starters={match.starters}
-                          matchTitle={`vs ${match.isHome ? match.awayTeam : match.homeTeam}`}
-                          matchDate={formatMatchDate(match.startTimestamp)}
-                        />
-                      </div>
-                    ))}
+                    {lineupMatches.slice(0, 5).map((match, index) => {
+                      const opponentTeam = match.isHome ? match.awayTeam : match.homeTeam
+                      
+                      return (
+                        <div key={match.matchId} className="flex justify-center">
+                          <Pitch 
+                            starters={match.starters}
+                            matchTitle={
+                              <div className="flex items-center justify-center gap-2">
+                                <span>vs {opponentTeam}</span>
+                                <img 
+                                  src={`league_logos/${opponentTeam}.png`} 
+                                  alt={`${opponentTeam} logo`}
+                                  className="h-4 w-4"
+                                />
+                              </div>
+                            }
+                            matchDate={formatMatchDate(match.startTimestamp)}
+                          />
+                        </div>
+                      )
+                    })}
                   </div>
                 )}
               </div>
@@ -324,7 +337,7 @@ function OppositionView() {
                   <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
                   
                   <div className="mb-4 relative z-10">
-                    <h3 className="text-lg font-medium text-white/90">
+                    <h3 className="text-lg font-medium text-white/90 underline decoration-1 underline-offset-4" style={{ textDecorationColor: '#8B5CF6' }}>
                       {section.title}
                     </h3>
                   </div>

@@ -29,7 +29,7 @@ export const InteractiveTable: React.FC<InteractiveTableProps> = ({
   columns,
   title,
   color,
-  height = 900
+  height = 800
 }) => {
   const [sortConfig, setSortConfig] = useState<{
     key: string
@@ -94,6 +94,39 @@ export const InteractiveTable: React.FC<InteractiveTableProps> = ({
     return sortConfig.direction === 'asc' ? '↑' : '↓'
   }
 
+  // Determine column width based on column type
+  const getColumnClasses = (column: Column) => {
+    const baseClasses = "text-center text-[10px] font-bold text-white uppercase tracking-wider"
+    const hoverClasses = column.sortable ? 'cursor-pointer hover:bg-gray-700/50 transition-colors' : ''
+    
+    // Wide columns for player info
+    if (column.key === 'name') {
+      return `px-4 py-3 text-left min-w-32 ${baseClasses} ${hoverClasses}`
+    }
+    if (column.key === 'team') {
+      return `px-3 py-3 text-left min-w-24 ${baseClasses} ${hoverClasses}`
+    }
+    if (column.key === 'position') {
+      return `px-2 py-3 min-w-16 ${baseClasses} ${hoverClasses}`
+    }
+    
+    // Compact columns for stats
+    return `px-2 py-3 w-20 max-w-20 ${baseClasses} ${hoverClasses}`
+  }
+
+  const getCellClasses = (column: Column) => {
+    if (column.key === 'name') {
+      return "px-4 py-3 text-left min-w-30"
+    }
+    if (column.key === 'team') {
+      return "px-3 py-3 text-left min-w-22"
+    }
+    if (column.key === 'position') {
+      return "px-2 py-3 text-center min-w-16"
+    }
+    return "px-2 py-3 w-24 max-w-24 text-center"
+  }
+
   const renderCell = (row: TableData, column: Column) => {
     const cellValue = row[column.key]
 
@@ -119,7 +152,7 @@ export const InteractiveTable: React.FC<InteractiveTableProps> = ({
 
     // Regular cell for non-stat columns (name, team, etc.)
     return (
-      <span className="text-white/90 font-medium">
+      <span className="text-white/90 font-medium text-sm">
         {column.format ? column.format(cellValue) : String(cellValue)}
       </span>
     )
@@ -134,54 +167,71 @@ export const InteractiveTable: React.FC<InteractiveTableProps> = ({
         </p>
       </div>
 
+      {/* Keep height constraint but hide scrollbars */}
       <div 
-        className="overflow-auto rounded-lg border border-white/10 bg-gray-900/30"
-        style={{ height }}
+        className="rounded-lg border border-white/10 bg-gray-900/30 overflow-hidden"
+        style={{ 
+          height: `${height}px`,
+          scrollbarWidth: 'none', /* Firefox */
+          msOverflowStyle: 'none'  /* IE and Edge */
+        }}
       >
-        <div className="min-w-max">
-          <table className="w-full text-sm">
-            <thead className="sticky top-0 bg-gray-800/95 backdrop-blur z-20">
-              <tr>
-                {columns.map((column) => (
-                  <th
-                    key={column.key}
-                    onClick={() => handleSort(column.key)}
-                    className={`
-                      px-4 py-4 text-left text-xs font-bold text-white uppercase tracking-wider min-w-24
-                      ${column.sortable ? 'cursor-pointer hover:bg-gray-700/50 transition-colors' : ''}
-                    `}
-                    style={{ borderBottom: `3px solid ${color}` }}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <span className="whitespace-nowrap">{column.label}</span>
-                      {column.sortable && (
-                        <span className="text-white/60 text-sm">
-                          {getSortIcon(column.key)}
-                        </span>
-                      )}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="bg-gray-900/20">
-              {sortedData.map((row, index) => (
-                <motion.tr
-                  key={row.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.02 }}
-                  className="hover:bg-gray-800/20 transition-colors border-b border-white/10"
-                >
+        <div 
+          className="h-full overflow-y-scroll pr-4 -mr-4"
+          style={{
+            scrollbarWidth: 'none', /* Firefox */
+            msOverflowStyle: 'none'  /* IE and Edge */
+          }}
+        >
+          <style jsx>{`
+            div::-webkit-scrollbar {
+              display: none; /* Chrome, Safari and Opera */
+            }
+          `}</style>
+          <div className="min-w-max">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 bg-gray-800/95 backdrop-blur z-20">
+                <tr>
                   {columns.map((column) => (
-                    <td key={column.key} className="px-4 py-4 min-w-24">
-                      {renderCell(row, column)}
-                    </td>
+                    <th
+                      key={column.key}
+                      onClick={() => handleSort(column.key)}
+                      className={getColumnClasses(column)}
+                      style={{ borderBottom: `3px solid ${color}` }}
+                    >
+                      <div className="flex flex-col items-center space-y-1">
+                        <span className="leading-tight break-words hyphens-auto text-center">
+                          {column.label}
+                        </span>
+                        {column.sortable && (
+                          <span className="text-white/60 text-xs">
+                            {getSortIcon(column.key)}
+                          </span>
+                        )}
+                      </div>
+                    </th>
                   ))}
-                </motion.tr>
-              ))}
-            </tbody>
-          </table>
+                </tr>
+              </thead>
+              <tbody className="bg-gray-900/20">
+                {sortedData.map((row, index) => (
+                  <motion.tr
+                    key={row.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.02 }}
+                    className="hover:bg-gray-800/20 transition-colors border-b border-white/10"
+                  >
+                    {columns.map((column) => (
+                      <td key={column.key} className={getCellClasses(column)}>
+                        {renderCell(row, column)}
+                      </td>
+                    ))}
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

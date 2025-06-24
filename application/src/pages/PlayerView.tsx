@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { BarChart } from '../components/charts/BarChart'
 import { InteractiveTable } from '../components/charts/InteractiveTable'
 import { usePlayerData } from '../hooks/data/usePlayerData'
-import { getValue, getPercentileRank } from '../utils/processors/playerDataProcessor'
+import { getValue } from '../utils/processors/playerDataProcessor'
 import { PlayerSelector } from '../components/common/PlayerSelector'
 import { MultiPlayerSelector } from '../components/common/MultiPlayerSelector'
 import type { PlayerFilters } from '../components/common/MultiPlayerSelector'
@@ -152,163 +152,150 @@ function PlayerView() {
   const getStatData = (statNames: string[]) => {
     if (!selectedPlayer) return []
     
-    const samePositionPlayers = data.filter(p => p.position === selectedPlayer.position)
-    
     return statNames.map(statName => ({
-      name: STAT_DISPLAY_NAMES[statName] || statName, // Use display name if available
+      name: STAT_DISPLAY_NAMES[statName] || statName,
       value: getValue(selectedPlayer, statName),
-      percentile: getPercentileRank(selectedPlayer, statName, samePositionPlayers)
+      percentile: getValue(selectedPlayer, statName) // Use getValue for percentile too - it's already stored
     }))
   }
 
-// Update the handlePlayerSearch function to prevent duplicates:
-
-const handlePlayerSearch = async (filters: PlayerFilters) => {
-  setIsSearching(true)
-  try {
-    // Filter players based on ALL the search criteria
-    let filteredPlayers = data.filter(player => {
-      // Check season match (REQUIRED)
-      if (filters.season && player.season !== filters.season) {
-        return false
-      }
-      
-      // Check league match (REQUIRED)  
-      if (filters.league && player.league !== filters.league) {
-        return false
-      }
-      
-      // Check position match (REQUIRED)
-      if (filters.position && player.position !== filters.position) {
-        return false
-      }
-      
-      // Check team match (OPTIONAL - only filter if team is specified)
-      if (filters.team && player.team !== filters.team) {
-        return false
-      }
-      
-      return true
-    })
-
-    // Remove duplicates based on unique player identification
-    const uniquePlayers = filteredPlayers.filter((player, index, self) => {
-      return index === self.findIndex(p => 
-        p.name === player.name && 
-        p.team === player.team && 
-        p.season === player.season &&
-        p.league === player.league
-      )
-    })
-
-    console.log('Original filtered players:', filteredPlayers.length)
-    console.log('Unique players:', uniquePlayers.length)
-
-    // Get position-specific stats for the table
-    const positionStats = getPositionRelevantStats(filters.position)
-    
-    // Transform to table format with position-specific stats
-    const tableData = uniquePlayers.map((player, index) => {
-      // Create a more unique ID using multiple player properties
-      const uniqueId = `${player.name}-${player.team}-${player.season}-${player.league}-${index}`
-      
-      const baseData = {
-        id: uniqueId, // Use the unique ID
-        name: player.name,
-        team: player.team,
-        position: player.position,
-        season: player.season,
-        league: player.league
-      }
-
-      // Add position-specific stats dynamically
-      const positionSpecificData: any = {}
-      positionStats.forEach(statName => {
-        const key = statName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
-        const value = getValue(player, statName)
-        const percentile = getPercentileRank(player, statName, uniquePlayers) // Use unique players for percentile calculation
+  const handlePlayerSearch = async (filters: PlayerFilters) => {
+    setIsSearching(true)
+    try {
+      // Filter players based on ALL the search criteria
+      let filteredPlayers = data.filter(player => {
+        // Check season match (REQUIRED)
+        if (filters.season && player.season !== filters.season) {
+          return false
+        }
         
-        positionSpecificData[key] = {
-          value: value,
-          percentile: percentile,
-          displayName: STAT_DISPLAY_NAMES[statName] || statName,
-          originalName: statName,
-          formatted: typeof value === 'number' ? 
-            (statName.includes('%') ? `${value.toFixed(1)}%` : value.toFixed(2)) : 
-            value
+        // Check league match (REQUIRED)  
+        if (filters.league && player.league !== filters.league) {
+          return false
+        }
+        
+        // Check position match (REQUIRED)
+        if (filters.position && player.position !== filters.position) {
+          return false
+        }
+        
+        // Check team match (OPTIONAL - only filter if team is specified)
+        if (filters.team && player.team !== filters.team) {
+          return false
+        }
+        
+        return true
+      })
+
+      // Remove duplicates based on unique player identification
+      const uniquePlayers = filteredPlayers.filter((player, index, self) => {
+        return index === self.findIndex(p => 
+          p.name === player.name && 
+          p.team === player.team && 
+          p.season === player.season &&
+          p.league === player.league
+        )
+      })
+
+      console.log('Original filtered players:', filteredPlayers.length)
+      console.log('Unique players:', uniquePlayers.length)
+
+      // Get position-specific stats for the table
+      const positionStats = getPositionRelevantStats(filters.position)
+      
+      // Transform to table format with position-specific stats
+      const tableData = uniquePlayers.map((player, index) => {
+        // Create a more unique ID using multiple player properties
+        const uniqueId = `${player.name}-${player.team}-${player.season}-${player.league}-${index}`
+        
+        const baseData = {
+          id: uniqueId,
+          name: player.name,
+          team: player.team,
+          position: player.position,
+          season: player.season,
+          league: player.league
+        }
+
+        // Add position-specific stats dynamically - use getValue for stored percentiles
+        const positionSpecificData: any = {}
+        positionStats.forEach(statName => {
+          const key = statName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
+          const rawValue = getValue(player, statName)
+          const percentileValue = getValue(player, statName) // Same value - it's already the percentile stored in data
+          
+          positionSpecificData[key] = {
+            value: rawValue,
+            percentile: percentileValue, // Use the stored percentile value directly
+            displayName: STAT_DISPLAY_NAMES[statName] || statName,
+            originalName: statName,
+            formatted: typeof rawValue === 'number' ? 
+              (statName.includes('%') ? `${rawValue.toFixed(1)}%` : rawValue.toFixed(2)) : 
+              rawValue
+          }
+        })
+
+        return {
+          ...baseData,
+          ...positionSpecificData,
+          rating: Math.round((
+            getValue(player, positionStats[0]) +
+            getValue(player, positionStats[1]) +
+            getValue(player, positionStats[2])
+          ) / 3)
         }
       })
 
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 200))
+      
+      console.log('Final table data:', tableData.length)
+      setMultiPlayerData(tableData)
+    } catch (error) {
+      console.error('Error searching players:', error)
+    } finally {
+      setIsSearching(false)
+    }
+  }
+
+  // Generate dynamic table columns based on position
+  const getTableColumns = () => {
+    if (multiPlayerData.length === 0) return []
+
+    const baseColumns = [
+      { key: 'name', label: 'Player', sortable: true },
+      { key: 'team', label: 'Team', sortable: true },
+    ]
+
+    // Get the first player to determine position and stats
+    const firstPlayer = multiPlayerData[0]
+    const positionStats = getPositionRelevantStats(firstPlayer.position)
+    
+    // Create columns for position-specific stats
+    const statColumns = positionStats.map(statName => {
+      const key = statName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
+      const displayName = STAT_DISPLAY_NAMES[statName] || statName
+      
       return {
-        ...baseData,
-        ...positionSpecificData,
-        rating: Math.round((
-          getPercentileRank(player, positionStats[0], uniquePlayers) +
-          getPercentileRank(player, positionStats[1], uniquePlayers) +
-          getPercentileRank(player, positionStats[2], uniquePlayers)
-        ) / 3)
+        key: key,
+        label: displayName,
+        sortable: true,
+        format: (statObject: any) => {
+          if (!statObject) return 'N/A'
+          
+          // For the table display, show the percentile value (which is stored as the main value)
+          const percentile = statObject.percentile
+          if (typeof percentile === 'number') {
+            return Math.round(percentile).toString()
+          }
+          
+          return 'N/A'
+        }
       }
     })
 
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    console.log('Final table data:', tableData.length)
-    setMultiPlayerData(tableData)
-  } catch (error) {
-    console.error('Error searching players:', error)
-  } finally {
-    setIsSearching(false)
+    return [...baseColumns, ...statColumns]
   }
-}
-
-  // Generate dynamic table columns based on position
- // Replace the getTableColumns function with this corrected version:
-
-// Generate dynamic table columns based on position
-const getTableColumns = () => {
-  if (multiPlayerData.length === 0) return []
-
-  const baseColumns = [
-    { key: 'name', label: 'Player', sortable: true },
-    { key: 'team', label: 'Team', sortable: true },
-  ]
-
-  // Get the first player to determine position and stats
-  const firstPlayer = multiPlayerData[0]
-  const positionStats = getPositionRelevantStats(firstPlayer.position)
-  
-  // Create columns for position-specific stats (limit to 6 for table width)
-  const statColumns = positionStats.map(statName => {
-    const key = statName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
-    const displayName = STAT_DISPLAY_NAMES[statName] || statName
-    
-    return {
-      key: key,
-      label: displayName,
-      sortable: true,
-      format: (statObject: any) => {
-        if (!statObject) return 'N/A'
-        
-        // If it's already a formatted string, return it
-        if (statObject.formatted) return statObject.formatted
-        
-        // Otherwise try to format the value
-        const value = statObject.value
-        if (typeof value === 'number') {
-          if (statName.includes('%')) {
-            return `${value.toFixed(1)}%`
-          }
-          return value.toFixed(2)
-        }
-        
-        return value || 'N/A'
-      }
-    }
-  })
-
-  return [...baseColumns, ...statColumns]
-}
 
   return (
     <div className="flex flex-col space-y-6 p-6 relative" style={{ zIndex: 1 }}>
@@ -407,7 +394,7 @@ const getTableColumns = () => {
                     >
                       <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-red-500 to-transparent" />
                       <div className="mb-4 relative z-10">
-                        <h3 className="text-lg font-medium text-white/90">
+                        <h3 className="text-lg font-medium text-white/90 underline decoration-2 underline-offset-4" style={{ textDecorationColor: '#8B5CF6' }}>
                           {getPanelTitles(selectedPlayer.position).panel1}
                         </h3>
                       </div>
@@ -430,7 +417,7 @@ const getTableColumns = () => {
                     >
                       <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-blue-500 to-transparent" />
                       <div className="mb-4 relative z-10">
-                        <h3 className="text-lg font-medium text-white/90">
+                        <h3 className="text-lg font-medium text-white/90 underline decoration-2 underline-offset-4" style={{ textDecorationColor: '#8B5CF6' }}>
                           {getPanelTitles(selectedPlayer.position).panel2}
                         </h3>
                       </div>
@@ -453,7 +440,7 @@ const getTableColumns = () => {
                     >
                       <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-green-500 to-transparent" />
                       <div className="mb-4 relative z-10">
-                        <h3 className="text-lg font-medium text-white/90">
+                        <h3 className="text-lg font-medium text-white/90 underline decoration-2 underline-offset-4" style={{ textDecorationColor: '#8B5CF6' }}>
                           {getPanelTitles(selectedPlayer.position).panel3}
                         </h3>
                       </div>
@@ -476,7 +463,7 @@ const getTableColumns = () => {
                     >
                       <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
                       <div className="mb-4 relative z-10">
-                        <h3 className="text-lg font-medium text-white/90">
+                        <h3 className="text-lg font-medium text-white/90 underline decoration-2 underline-offset-4" style={{ textDecorationColor: '#8B5CF6' }}>
                           {getPanelTitles(selectedPlayer.position).panel4}
                         </h3>
                       </div>
@@ -499,7 +486,7 @@ const getTableColumns = () => {
                   >
                     <div className="absolute inset-0 opacity-5 pointer-events-none bg-gradient-to-br from-purple-500 to-transparent" />
                     <div className="text-center relative z-10">
-                      <h3 className="text-xl font-medium text-white/90 mb-4">
+                      <h3 className="text-lg font-medium text-white/90 underline decoration-1 underline-offset-4">
                         Select a Player
                       </h3>
                       <p className="text-white/70">
