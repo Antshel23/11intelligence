@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import { Header } from './components/common/Header'
 import LandingPage from './pages/LandingPage'
 import OppositionView from './pages/OppositionView'
 import PlayerView from './pages/PlayerView'
-import SquadView from './pages/SquadView'
 import ProgressView from './pages/ProgressView'
 
 function AppContent() {
@@ -31,42 +31,50 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#181D21]">
-      <Routes>
-        <Route path="/" element={
-          <>
-            <Header selectedTab={getSelectedTab()} onTabChange={handleTabChange} />
-            <main className="pt-20 px-8 pb-8">
-              <LandingPage />
-            </main>
-          </>
-        } />
-        <Route path="/opposition" element={
-          <>
-            <Header selectedTab={getSelectedTab()} onTabChange={handleTabChange} />
-            <main className="pt-20 px-8 pb-8">
-              <OppositionView />
-            </main>
-          </>
-        } />
-        <Route path="/player" element={
-          <>
-            <Header selectedTab={getSelectedTab()} onTabChange={handleTabChange} />
-            <main className="pt-20 px-8 pb-8">
-              <PlayerView />
-            </main>
-          </>
-        } />
-        <Route path="/progress" element={
-          <>
-            <Header selectedTab={getSelectedTab()} onTabChange={handleTabChange} />
-            <main className="pt-20 px-8 pb-8">
-              <ProgressView />
-            </main>
-          </>
-        } />
-      </Routes>
-    </div>
+    <>
+      <Helmet>
+        <title>Eleven Intelligence</title>
+        <link rel="icon" type="image/png" href="/league_logos/Dorking Wanderers.png" />
+        <meta name="description" content="Football Analytics Platform" />
+      </Helmet>
+      
+      <div className="min-h-screen bg-[#181D21]">
+        <Routes>
+          <Route path="/" element={
+            <>
+              <Header selectedTab={getSelectedTab()} onTabChange={handleTabChange} />
+              <main className="pt-20 px-8 pb-8">
+                <LandingPage />
+              </main>
+            </>
+          } />
+          <Route path="/opposition" element={
+            <>
+              <Header selectedTab={getSelectedTab()} onTabChange={handleTabChange} />
+              <main className="pt-20 px-8 pb-8">
+                <OppositionView />
+              </main>
+            </>
+          } />
+          <Route path="/player" element={
+            <>
+              <Header selectedTab={getSelectedTab()} onTabChange={handleTabChange} />
+              <main className="pt-20 px-8 pb-8">
+                <PlayerView />
+              </main>
+            </>
+          } />
+          <Route path="/progress" element={
+            <>
+              <Header selectedTab={getSelectedTab()} onTabChange={handleTabChange} />
+              <main className="pt-20 px-8 pb-8">
+                <ProgressView />
+              </main>
+            </>
+          } />
+        </Routes>
+      </div>
+    </>
   )
 }
 
