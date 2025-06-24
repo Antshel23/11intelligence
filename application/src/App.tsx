@@ -12,13 +12,11 @@ function AppContent() {
   const getSelectedTab = () => {
     switch (location.pathname) {
       case '/':
-        return 'home' // Add home case for landing page
+        return 'home'
       case '/opposition':
         return 'opposition'
       case '/player':
         return 'player'
-      case '/squad':
-        return 'squad'
       case '/progress':
         return 'progress'
       default:
@@ -33,8 +31,10 @@ function AppContent() {
   return (
     <>
       <Helmet>
-        <title>Eleven Intelligence</title>
-        <link rel="icon" type="image/png" href="/league_logos/Dorking Wanderers.png" />
+        <title>ELEVEN INTELLIGENCE</title>
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+        <link rel="shortcut icon" href="/favicon.png" />
         <meta name="description" content="Football Analytics Platform" />
       </Helmet>
       

@@ -70,12 +70,12 @@ function OppositionView() {
           percentile: getPercentileRank(selectedTeamData, 'Box entry via cross')
         },
         { 
-          name: "1v1 dribble Threat", 
+          name: "1v1 Dribble Threat", 
           value: getValue(selectedTeamData, 'Box entry via run'),
           percentile: getPercentileRank(selectedTeamData, 'Box entry via run')
         },
         { 
-          name: "10 space pass Threat", 
+          name: "10-space Pass Threat", 
           value: getValue(selectedTeamData, 'Deep completed passes'),
           percentile: getPercentileRank(selectedTeamData, 'Deep completed passes')
         },
