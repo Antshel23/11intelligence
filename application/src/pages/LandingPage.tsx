@@ -23,7 +23,7 @@ function LandingPage() {
   useEffect(() => {
     const loadFixtures = async () => {
       try {
-        const response = await fetch('dist/data/fixture_data.json')
+        const response = await fetch('data/fixture_data.json')
         const data: FixtureData = await response.json()
         setFixtures(data.fixtures)
       } catch (error) {
