@@ -1,0 +1,396 @@
+{
+    "season": "2025/26",
+    "team": "Dorking Wanderers FC",
+    "fixtures": [
+      {
+        "id": "1",
+        "date": "2025-07-12",
+        "opposition": "Barnet",
+        "isHome": false,
+        "competition": "Friendly"
+      },
+      {
+        "id": "2",
+        "date": "2025-07-15",
+        "opposition": "Leatherhead",
+        "isHome": true,
+        "competition": "Friendly"
+      },
+      {
+        "id": "3",
+        "date": "2025-07-19",
+        "opposition": "Sholing",
+        "isHome": false,
+        "competition": "Friendly"
+      },
+      {
+        "id": "4",
+        "date": "2025-07-26",
+        "opposition": "Aldershot",
+        "isHome": true,
+        "competition": "Friendly"
+      },
+      {
+        "id": "5",
+        "date": "2025-07-29",
+        "opposition": "Walton & Hersham",
+        "isHome": true,
+        "competition": "Friendly"
+      },
+      {
+        "id": "6",
+        "date": "2025-08-02",
+        "opposition": "Farnham",
+        "isHome": false,
+        "competition": "Friendly"
+      },
+      {
+        "id": "7",
+        "date": "2025-08-09",
+        "opposition": "Chippenham Town",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "8",
+        "date": "2025-08-16",
+        "opposition": "Hampton & Richmond Borough",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "9",
+        "date": "2025-08-19",
+        "opposition": "Slough Town",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "10",
+        "date": "2025-08-23",
+        "opposition": "Hemel Hempstead",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "11",
+        "date": "2025-08-25",
+        "opposition": "Tonbridge Angels",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "12",
+        "date": "2025-08-30",
+        "opposition": "Bath City",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "13",
+        "date": "2025-09-02",
+        "opposition": "Hornchurch",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "14",
+        "date": "2025-09-06",
+        "opposition": "AFC Totton",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {"id": "101",
+      "date": "2025-09-13",
+      "opposition": "FA",
+      "isHome": true,
+      "competition": "Cup"
+    },
+      {
+        "id": "15",
+        "date": "2025-09-20",
+        "opposition": "Dagenham & Redbridge",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "102",
+        "date": "2025-09-20",
+        "opposition": "FA",
+        "isHome": true,
+        "competition": "Cup"
+      },
+      {
+        "id": "16",
+        "date": "2025-10-04",
+        "opposition": "Chelmsford City",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "17",
+        "date": "2025-10-11",
+        "opposition": "Maidenhead United",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "18",
+        "date": "2025-10-18",
+        "opposition": "Ebbsfleet United",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "19",
+        "date": "2025-10-21",
+        "opposition": "Dover Athletic",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "20",
+        "date": "2025-10-25",
+        "opposition": "Torquay United",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "21",
+        "date": "2025-11-01",
+        "opposition": "Salisbury",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "22",
+        "date": "2025-11-04",
+        "opposition": "Enfield Town",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "23",
+        "date": "2025-11-08",
+        "opposition": "Farnborough",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "201",
+        "date": "2025-11-15",
+        "opposition": "FAT",
+        "isHome": false,
+        "competition": "Trophy"
+      },
+      {
+        "id": "24",
+        "date": "2025-11-22",
+        "opposition": "Maidstone United",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "25",
+        "date": "2025-11-25",
+        "opposition": "Eastbourne Borough",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "26",
+        "date": "2025-11-29",
+        "opposition": "Chesham United",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "27",
+        "date": "2025-12-06",
+        "opposition": "Weston Super Mare",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {"id": "202",
+      "date": "2025-12-13",
+      "opposition": "FAT",
+      "isHome": true,
+      "competition": "Trophy"
+    },
+      {
+        "id": "28",
+        "date": "2025-12-20",
+        "opposition": "Slough Town",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "29",
+        "date": "2025-12-26",
+        "opposition": "Horsham",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "30",
+        "date": "2025-12-30",
+        "opposition": "Worthing FC",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "31",
+        "date": "2026-01-03",
+        "opposition": "Tonbridge Angels",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "32",
+        "date": "2026-01-10",
+        "opposition": "Hornchurch",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "33",
+        "date": "2026-01-17",
+        "opposition": "Hampton & Richmond Borough",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "34",
+        "date": "2026-01-24",
+        "opposition": "Chippenham Town",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "35",
+        "date": "2026-01-27",
+        "opposition": "Enfield Town",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "36",
+        "date": "2026-01-31",
+        "opposition": "Salisbury",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "37",
+        "date": "2026-02-07",
+        "opposition": "Torquay United",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "38",
+        "date": "2026-02-10",
+        "opposition": "Dover Athletic",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "39",
+        "date": "2026-02-14",
+        "opposition": "Farnborough",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "40",
+        "date": "2026-02-21",
+        "opposition": "Maidstone United",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "41",
+        "date": "2026-02-24",
+        "opposition": "Eastbourne Borough",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "42",
+        "date": "2026-02-28",
+        "opposition": "Chesham United",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "43",
+        "date": "2026-03-07",
+        "opposition": "Dagenham & Redbridge",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "44",
+        "date": "2026-03-10",
+        "opposition": "Chelmsford City",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "45",
+        "date": "2026-03-14",
+        "opposition": "Ebbsfleet United",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "46",
+        "date": "2026-03-21",
+        "opposition": "Maidenhead United",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "47",
+        "date": "2026-03-28",
+        "opposition": "Hemel Hempstead",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "48",
+        "date": "2026-04-03",
+        "opposition": "Horsham",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "49",
+        "date": "2026-04-06",
+        "opposition": "Worthing FC",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "50",
+        "date": "2026-04-11",
+        "opposition": "AFC Totton",
+        "isHome": false,
+        "competition": "National South"
+      },
+      {
+        "id": "51",
+        "date": "2026-04-18",
+        "opposition": "Bath City",
+        "isHome": true,
+        "competition": "National South"
+      },
+      {
+        "id": "52",
+        "date": "2026-04-25",
+        "opposition": "Weston Super Mare",
+        "isHome": false,
+        "competition": "National South"
+      }
+    ]
+  }

@@ -14,6 +14,7 @@ export function Header({ selectedTab, onTabChange }: HeaderProps) {
   }
 
   const tabs = [
+    { id: '', name: 'Home' },
     { id: 'opposition', name: 'Opposition' },
     { id: 'player', name: 'Player' },
     { id: 'progress', name: 'Progress' }
