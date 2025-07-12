@@ -45,6 +45,22 @@ export function SquadList({ players, onFitnessChange, onPositionChange }: SquadL
   const positions = ['GK', 'DEF', 'MID', 'FWD', 'WIDE']
   const fitnessLevels: ('red' | 'orange' | 'green')[] = ['red', 'orange', 'green']
 
+  // Position order for sorting
+  const positionOrder: Record<string, number> = {
+    'GK': 1,
+    'DEF': 2,
+    'WIDE': 3,
+    'MID': 4,
+    'FWD': 5
+  }
+
+  // Sort players by position order
+  const sortedPlayers = [...players].sort((a, b) => {
+    const orderA = positionOrder[a.position] || 999
+    const orderB = positionOrder[b.position] || 999
+    return orderA - orderB
+  })
+
   const handleDragStart = (e: React.DragEvent, player: Player) => {
     e.dataTransfer.setData('text/plain', player.id)
     e.dataTransfer.effectAllowed = 'move'
@@ -89,16 +105,11 @@ export function SquadList({ players, onFitnessChange, onPositionChange }: SquadL
     }
   }
 
-  const getPitchPositionLabel = (pitchPosition: string) => {
-    if (pitchPosition === 'squad') return 'Squad'
-    if (pitchPosition === 'sub') return 'Substitute'
-    return pitchPosition.toUpperCase()
-  }
-
-  const getPitchPositionColor = (pitchPosition: string) => {
-    if (pitchPosition === 'squad') return 'bg-gray-500/20 text-gray-400'
-    if (pitchPosition === 'sub') return 'bg-purple-500/20 text-purple-400'
-    return 'bg-green-500/20 text-green-400'
+  // Generate shirt number based on player ID or name
+  const getShirtNumber = (player: Player) => {
+    // If you have a shirt_number field, use it: player.shirt_number
+    // Otherwise, generate from ID or use a simple number
+    return player.id || Math.floor(Math.random() * 99) + 1
   }
 
   return (
@@ -108,29 +119,29 @@ export function SquadList({ players, onFitnessChange, onPositionChange }: SquadL
           <table className="w-full">
             <thead className="bg-white/10 sticky top-0">
               <tr>
+                <th className="text-left text-white font-semibold py-1.5 px-2 text-xs">Number</th>
                 <th className="text-left text-white font-semibold py-1.5 px-2 text-xs">Name</th>
-                <th className="text-left text-white font-semibold py-1.5 px-2 text-xs">Pitch Position</th>
                 <th className="text-left text-white font-semibold py-1.5 px-2 text-xs">Position</th>
                 <th className="text-left text-white font-semibold py-1.5 px-2 text-xs">Fitness</th>
               </tr>
             </thead>
             <tbody>
-              {players.map((player) => (
+              {sortedPlayers.map((player) => (
                 <tr
                   key={player.id}
-                  className="border-b border-white/10 hover:bg-white/5 cursor-move"
+                  className="border-b border-white/10 hover:bg-white/5 cursor-move align-middle"
                   draggable
                   onDragStart={(e) => handleDragStart(e, player)}
                   onDragEnd={handleDragEnd}
                 >
                   <td className="py-1.5 px-2">
-                    <span className="text-white font-medium text-xs">{player.name}</span>
+                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-xs">{getShirtNumber(player)}</span>
+                    </div>
                   </td>
                   
                   <td className="py-1.5 px-2">
-                    <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getPitchPositionColor(player.pitch_position)}`}>
-                      {getPitchPositionLabel(player.pitch_position)}
-                    </span>
+                    <span className="text-white font-medium text-xs">{player.name}</span>
                   </td>
                   
                   <td className="py-1.5 px-2">

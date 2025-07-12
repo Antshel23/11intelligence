@@ -16,40 +16,41 @@ interface PitchPosition {
 
 export function FootballPitch({ players, onPlayerDrop, onPlayerRemove }: FootballPitchProps) {
   const [draggedOver, setDraggedOver] = useState<string | null>(null)
+  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set())
 
   // Professional 3-5-2 formation - shifted left by 20px
   const pitchPositions: PitchPosition[] = [
     // Goalkeeper
-    { id: 'gk', x: 39.5, y: 15, label: 'GK' },
+    { id: 'gk', x: 39.5, y: 11, label: 'GK' },
     
-    // Centre Backs (3)
-    { id: 'cb1', x: 20.5, y: 35, label: 'RCB' },
-    { id: 'cb2', x: 39.5, y: 28, label: 'CB' },
-    { id: 'cb3', x: 57.5, y: 35, label: 'LCB' },
+    // Centre Backs (3) - more spread out
+    { id: 'cb1', x: 19, y: 32, label: 'RCB' },
+    { id: 'cb2', x: 39.5, y: 26, label: 'CB' },
+    { id: 'cb3', x: 60, y: 32, label: 'LCB' },
     
-    // Wing Backs
-    { id: 'rm', x: 15, y: 58, label: 'RM' },
-    { id: 'lm', x: 64, y: 58, label: 'LM' },
+    // Wing Backs - wider spacing
+    { id: 'rm', x: 14, y: 55, label: 'RM' },
+    { id: 'lm', x: 64, y: 55, label: 'LM' },
     
-    // Central Midfield (2)
+    // Central Midfield (2) - more spread
     { id: 'dm', x: 39.5, y: 42, label: 'DM' },
-    { id: 'cm1', x: 29, y: 55, label: 'RCM' },
-    { id: 'cm2', x: 50, y: 55, label: 'LCM' },
+    { id: 'cm1', x: 29, y: 58, label: 'RCM' },
+    { id: 'cm2', x: 50, y: 58, label: 'LCM' },
     
-    // Strikers (2)
-    { id: 'st1', x: 29, y: 74, label: 'RS' },
-    { id: 'st2', x: 50, y: 74, label: 'LS' },
+    // Strikers (2) - wider spacing
+    { id: 'st1', x: 29, y: 75, label: 'RS' },
+    { id: 'st2', x: 50, y: 75, label: 'LS' },
   ]
-
-  // Substitute positions on the right side
+  
+  // Substitute positions - more spaced out vertically
   const substitutePositions = [
-    { id: 'sub1', x: 78, y: 16, label: 'S1' },
-    { id: 'sub2', x: 78, y: 28, label: 'S2' },
-    { id: 'sub3', x: 78, y: 40, label: 'S3' },
-    { id: 'sub4', x: 78, y: 52, label: 'S4' },
-    { id: 'sub5', x: 78, y: 64, label: 'S5' },
-    { id: 'sub6', x: 78, y: 76, label: 'S6' },
-    { id: 'sub7', x: 78, y: 88, label: 'S7' },
+    { id: 'sub1', x: 78, y: 9, label: 'S1' },
+    { id: 'sub2', x: 78, y: 23, label: 'S2' },
+    { id: 'sub3', x: 78, y: 37, label: 'S3' },
+    { id: 'sub4', x: 78, y: 51, label: 'S4' },
+    { id: 'sub5', x: 78, y: 65, label: 'S5' },
+    { id: 'sub6', x: 78, y: 79, label: 'S6' },
+    { id: 'sub7', x: 78, y: 93, label: 'S7' },
   ]
 
   // Squad players positions - next to subs with horizontal spacing
@@ -57,7 +58,7 @@ export function FootballPitch({ players, onPlayerDrop, onPlayerRemove }: Footbal
   const squadPositions = squadPlayersOnPitch.map((_, index) => ({
     id: `squad_${index}`,
     x: 92,
-    y: 16 + (index * 12),
+    y: 12 + (index * 14), // Increased spacing from 12 to 14
     label: 'SQ'
   }))
 
@@ -67,6 +68,14 @@ export function FootballPitch({ players, onPlayerDrop, onPlayerRemove }: Footbal
 
   const getSquadPlayerByIndex = (index: number) => {
     return squadPlayersOnPitch[index]
+  }
+
+  const getPlayerImagePath = (playerName: string) => {
+    return `/player_logos/${playerName}.webp`
+  }
+
+  const handleImageError = (playerId: string) => {
+    setImageErrors(prev => new Set(prev).add(playerId))
   }
 
   const handleDragStart = (e: React.DragEvent, player: Player) => {
@@ -133,6 +142,48 @@ export function FootballPitch({ players, onPlayerDrop, onPlayerRemove }: Footbal
     }
   }
 
+  const renderPlayerCircle = (player: Player, size: string, isSubstitute: boolean, isHighlighted: boolean) => {
+    const hasImageError = imageErrors.has(player.id)
+    const imagePath = getPlayerImagePath(player.name)
+    
+    return (
+      <div 
+        className={`${size} rounded-full border-00 flex items-center justify-center transition-all duration-200 overflow-hidden ${
+          isHighlighted 
+            ? 'scale-110 border-yellow-400' 
+            : 'border-white hover:scale-105'
+        }`}
+        style={{ 
+          backgroundColor: hasImageError ? (
+            player.fitness === 'red' ? '#DC2626' : 
+            player.fitness === 'orange' ? '#EA580C' : 
+            isSubstitute ? '#8B5CF6' : '#2563EB'
+          ) : 'transparent',
+          borderColor: isHighlighted ? '#FCD34D' : '#FFFFFF'
+        }}
+      >
+        {!hasImageError ? (
+          <img
+            src={imagePath}
+            alt={player.name}
+            className="w-full h-full object-cover rounded-full"
+            style={{
+              objectPosition: 'center -60%',
+              transform: 'scale(1.3)'
+            }}
+            loading="lazy"
+            decoding="async"
+            onError={() => handleImageError(player.id)}
+          />
+        ) : (
+          <span className={`text-white font-bold ${size === 'w-12 h-12' ? 'text-xs' : 'text-xs'}`}>
+            YTH
+          </span>
+        )}
+      </div>
+    )
+  }
+
   const renderPlayerPosition = (pos: PitchPosition, isSubstitute = false) => {
     const player = getPlayerAtPitchPosition(pos.id)
     const isHighlighted = draggedOver === pos.id
@@ -156,60 +207,40 @@ export function FootballPitch({ players, onPlayerDrop, onPlayerRemove }: Footbal
             draggable
             onDragStart={(e) => handleDragStart(e, player)}
           >
-            {/* Player Circle */}
+            {/* Player Circle - BIGGER SIZE */}
             <div className="relative">
-              <div 
-                className={`${isSubstitute ? 'w-12 h-12' : 'w-12 h-12'} rounded-full border-2 flex items-center justify-center shadow-lg transition-all duration-200 ${
-                  isHighlighted 
-                    ? 'scale-110 border-yellow-400' 
-                    : 'border-white hover:scale-105'
-                }`}
-                style={{ 
-                  backgroundColor: player.fitness === 'red' ? '#DC2626' : 
-                                 player.fitness === 'orange' ? '#EA580C' : 
-                                 isSubstitute ? '#8B5CF6' : '#2563EB',
-                  borderColor: isHighlighted ? '#FCD34D' : '#FFFFFF'
-                }}
-              >
-                <span className={`text-white font-bold ${isSubstitute ? 'text-xs' : 'text-xs'}`}>
-                  {player.name.split(' ')[1]?.[0] || player.name[0]}
-                </span>
-              </div>
+              {renderPlayerCircle(player, 'w-20 h-20', isSubstitute, isHighlighted)}
               
-              {/* Remove button - only show on hover */}
+              {/* Remove button */}
               <button
                 onClick={() => onPlayerRemove(player.id)}
-                className={`absolute -top-1 -right-1 ${isSubstitute ? 'w-4 h-4' : 'w-4 h-4'} bg-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-700`}
+                className={`absolute -top-1 -right-1 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-700`}
               >
                 ×
               </button>
             </div>
             
             {/* Player Name */}
-            <div className={`mt-0.5 px-1 py-0.5 bg-black/60 rounded text-white font-medium text-center whitespace-nowrap backdrop-blur-sm ${isSubstitute ? 'text-xs' : 'text-xs'}`}>
+            <div className={`mt-1 px-2 py-1 bg-black/60 rounded text-white font-medium text-center whitespace-nowrap backdrop-blur-sm ${isSubstitute ? 'text-xs' : 'text-sm'}`}>
               {isSubstitute ? player.name.split(' ')[1] || player.name.split(' ')[0] : player.name.split(' ')[1]}
             </div>
             
             {/* Fitness indicator */}
-            <div 
-              className={`rounded-full mt-0.5 ${isSubstitute ? 'w-1.5 h-1.5' : 'w-1.5 h-1.5'}`}
-              style={{ backgroundColor: getFitnessColor(player.fitness) }}
-            />
           </div>
         ) : (
           <div className="flex flex-col items-center">
-            {/* Empty position */}
-            <div className={`${isSubstitute ? 'w-12 h-12' : 'w-12 h-12'} rounded-full border-2 border-dashed flex items-center justify-center transition-all duration-200 cursor-pointer ${
+            {/* Empty position - BIGGER SIZE */}
+            <div className={`${isSubstitute ? 'w-16 h-16' : 'w-16 h-16'} rounded-full border-2 border-dashed flex items-center justify-center transition-all duration-200 cursor-pointer ${
               isHighlighted 
                 ? 'scale-110 border-yellow-400 bg-yellow-400/20' 
                 : 'border-white/50 hover:border-white/80 hover:bg-white/10'
             }`}>
-              <span className={`text-white/70 font-medium ${isSubstitute ? 'text-xs' : 'text-xs'}`}>
+              <span className={`text-white/70 font-medium ${isSubstitute ? 'text-sm' : 'text-sm'}`}>
                 {pos.label}
               </span>
             </div>
             
-            <div className={`mt-0.5 px-1 py-0.5 bg-black/40 rounded text-white/60 font-medium text-center ${isSubstitute ? 'text-xs' : 'text-xs'}`}>
+            <div className={`mt-1 px-2 py-1 bg-black/40 rounded text-white/60 font-medium text-center ${isSubstitute ? 'text-xs' : 'text-sm'}`}>
               Empty
             </div>
           </div>
@@ -242,36 +273,17 @@ export function FootballPitch({ players, onPlayerDrop, onPlayerRemove }: Footbal
           draggable
           onDragStart={(e) => handleDragStart(e, player)}
         >
-          {/* Player Circle */}
+          {/* Player Circle - BIGGER SIZE */}
           <div className="relative">
-            <div 
-              className={`w-12 h-12 rounded-full border-2 flex items-center justify-center shadow-lg transition-all duration-200 ${
-                isHighlighted 
-                  ? 'scale-110 border-yellow-400' 
-                  : 'border-white hover:scale-105'
-              }`}
-              style={{ 
-                backgroundColor: player.fitness === 'red' ? '#DC2626' : 
-                               player.fitness === 'orange' ? '#EA580C' : '#6B7280',
-                borderColor: isHighlighted ? '#FCD34D' : '#FFFFFF'
-              }}
-            >
-              <span className="text-white font-bold text-xs">
-                {player.name.split(' ')[1]?.[0] || player.name[0]}
-              </span>
-            </div>
+            {renderPlayerCircle(player, 'w-12 h-12', false, isHighlighted)}
           </div>
           
           {/* Player Name */}
-          <div className="mt-0.5 px-1 py-0.5 bg-black/60 rounded text-white font-medium text-center whitespace-nowrap backdrop-blur-sm text-xs">
+          <div className="mt-1 px-1 py-0.5 bg-black/60 rounded text-white font-medium text-center whitespace-nowrap backdrop-blur-sm text-xs">
             {player.name.split(' ')[1] || player.name.split(' ')[0]}
           </div>
           
           {/* Fitness indicator */}
-          <div 
-            className="rounded-full mt-0.5 w-1 h-1"
-            style={{ backgroundColor: getFitnessColor(player.fitness) }}
-          />
         </div>
       </div>
     )
@@ -369,7 +381,7 @@ export function FootballPitch({ players, onPlayerDrop, onPlayerRemove }: Footbal
         
         </svg>
 
-        {/* Main pitch positions */}
+        {/* Main pitch positions */} 
         {pitchPositions.map((pos) => renderPlayerPosition(pos, false))}
 
         {/* Substitute positions */}

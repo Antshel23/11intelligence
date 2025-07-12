@@ -20,6 +20,17 @@ function SquadView() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    
+    // Cleanup when component unmounts
+    return () => {
+      document.body.style.overflow = 'auto'
+      document.documentElement.style.overflow = 'auto'
+    }
+  }, [])
+  
+  useEffect(() => {
     const loadSquad = async () => {
       try {
         const response = await fetch('/data/squad_data.json')
@@ -75,8 +86,8 @@ function SquadView() {
 
   return (
     <div className="h-screen p-2 overflow-hidden">
-      <div className="h-800px grid grid-cols-5 gap-4">
-        {/* Left 2/3 - Football Pitch */}
+      <div className="grid grid-cols-5 gap-4">
+        {/* Left 3/5 - Football Pitch */}
         <div className="col-span-3 stat-panel2 p-2 overflow-hidden flex flex-col">
           <FootballPitch 
             players={players}
@@ -85,7 +96,7 @@ function SquadView() {
           />
         </div>
   
-        {/* Right 1/3 - Squad List */}
+        {/* Right 2/5 - Squad List */}
         <div className="col-span-2 stat-panel2 p-2 overflow-hidden flex flex-col">
           <SquadList 
             players={players}
