@@ -11,6 +11,7 @@ const LandingPage = lazy(() => import('./pages/LandingPage'))
 const OppositionView = lazy(() => import('./pages/OppositionView'))
 const PlayerView = lazy(() => import('./pages/PlayerView'))
 const ProgressView = lazy(() => import('./pages/ProgressView'))
+const SquadView = lazy(() => import('./pages/SquadView'))
 
 // Loading component
 const PageLoader = () => (
@@ -57,8 +58,10 @@ function AppContent() {
         return 'player'
       case '/progress':
         return 'progress'
+      case '/squad':
+        return 'squad'
       default:
-        return 'opposition'
+        return 'home'
     }
   }
 
@@ -116,6 +119,13 @@ function AppContent() {
               </LazyPageWrapper>
             </PageWrapper>
           } />
+          <Route path="/squad" element={
+          <PageWrapper>
+            <LazyPageWrapper>
+              <SquadView />
+            </LazyPageWrapper>
+          </PageWrapper>
+        } />
         </Routes>
       </div>
     </>

@@ -3,6 +3,13 @@
     "team": "Dorking Wanderers FC",
     "fixtures": [
       {
+        "id": "0",
+        "date": "2025-07-05",
+        "opposition": "Bourne",
+        "isHome": false,
+        "competition": "Friendly"
+      },
+      {
         "id": "1",
         "date": "2025-07-12",
         "opposition": "Barnet",

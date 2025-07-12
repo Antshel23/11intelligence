@@ -159,7 +159,7 @@ function LandingPage() {
                     isToday 
                       ? 'border-yellow-400 bg-yellow-400/10' 
                       : 'border-white/20 hover:border-white/40'
-                  } ${fixture ? 'bg-white/5' : ''}`}
+                  } ${fixture ? 'bg-[#ffff00]/15' : ''}`}
                 >
                   {/* Date and Home/Away - Top */}
                   <div className="flex items-center justify-between mb-2">
@@ -183,7 +183,7 @@ function LandingPage() {
                       <img 
                         src={getBadgePath(fixture.opposition)}
                         alt={fixture.opposition}
-                        className="w-12 h-12 object-contain"
+                        className="w-16 h-16 object-contain"
                         onError={(e) => {
                           
                           e.currentTarget.style.display = 'none'

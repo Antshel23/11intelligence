@@ -15,6 +15,7 @@ export function Header({ selectedTab, onTabChange }: HeaderProps) {
 
   const tabs = [
     { id: '', name: 'Home' },
+    { id: 'squad', name: 'Squad' },
     { id: 'opposition', name: 'Opposition' },
     { id: 'player', name: 'Player' },
     { id: 'progress', name: 'Progress' }
@@ -43,21 +44,21 @@ export function Header({ selectedTab, onTabChange }: HeaderProps) {
           </div>
           
           {/* Right - Navigation */}
-          <nav className="flex space-x-3">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabClick(tab.id)}
-                className={`px-5 py-1.5 rounded-xl font-medium text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 ${
-                  selectedTab === tab.id
-                    ? 'bg-[#242B32] text-[#EFEFEF] shadow-lg shadow-[#242B32]/20 border-2 border-[#7406B5]'
-                    : 'text-[#181D21] bg-white/80 hover:bg-[#242B32] hover:text-[#EFEFEF] shadow-md hover:shadow-lg border border-gray-200/50 hover:border-[#242B32]'
-                }`}
-              >
-                {tab.name}
-              </button>
-            ))}
-          </nav>
+          <nav className="flex space-x-1">
+  {tabs.map((tab) => (
+    <button
+      key={tab.id}
+      onClick={() => handleTabClick(tab.id)}
+      className={`px-6 py-2.5 font-semibold text-sm transition-all duration-150 ease-in-out relative ${
+        selectedTab === tab.id
+          ? 'text-[#7406B5] bg-white shadow-sm border-b-2 border-[#7406B5]'
+          : 'text-gray-600 hover:text-[#7406B5] hover:bg-white/50'
+      }`}
+    >
+      {tab.name}
+    </button>
+  ))}
+</nav>
         </div>
       </div>
     </header>

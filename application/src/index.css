@@ -85,6 +85,14 @@
            p-6;
   }
 
+  .stat-panel2 {
+    @apply bg-[#242B32] rounded-2xl
+           border border-white/[0.05]
+           shadow-lg backdrop-blur-sm
+           transition-all duration-300
+           p-6;
+  }
+
   .stat-panel:hover {
     @apply border-white/[0.08]
            shadow-xl

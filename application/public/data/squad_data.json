@@ -1,0 +1,156 @@
+{
+  "players": [
+    {
+      "id": "1",
+      "name": "Harrison Foulkes",
+      "position": "GK",
+      "pitch_position": "gk",
+      "fitness": "green"
+    },
+    {
+      "id": "2",
+      "name": "Brennan Camp",
+      "position": "DEF",
+      "pitch_position": "cb1",
+      "fitness": "green"
+    },
+    {
+      "id": "46",
+      "name": "Louie Annesley",
+      "position": "DEF",
+      "pitch_position": "cb2",
+      "fitness": "green"
+    },
+    {
+      "id": "33",
+      "name": "Frank Vincent",
+      "position": "WIDE",
+      "pitch_position": "lm",
+      "fitness": "green"
+    },
+    {
+      "id": "5",
+      "name": "Tony Craig",
+      "position": "DEF",
+      "pitch_position": "sub1",
+      "fitness": "green"
+    },
+    {
+      "id": "37",
+      "name": "George Francomb",
+      "position": "MID",
+      "pitch_position": "sub2",
+      "fitness": "green"
+    },
+    {
+      "id": "16",
+      "name": "Charlie Carter",
+      "position": "MID",
+      "pitch_position": "cm2",
+      "fitness": "green"
+    },
+    {
+      "id": "8",
+      "name": "Dennon Lewis",
+      "position": "WIDE",
+      "pitch_position": "sub6",
+      "fitness": "green"
+    },
+    {
+      "id": "3",
+      "name": "Jordan Norville-Williams",
+      "position": "DEF",
+      "pitch_position": "cb3",
+      "fitness": "green"
+    },
+    {
+      "id": "7",
+      "name": "Jimmy Muitt",
+      "position": "WIDE",
+      "pitch_position": "rm",
+      "fitness": "green"
+    },
+    {
+      "id": "18",
+      "name": "Luke Moore",
+      "position": "MID",
+      "pitch_position": "sub5",
+      "fitness": "green"
+    },
+    {
+      "id": "4",
+      "name": "Daniel Pybus",
+      "position": "MID",
+      "pitch_position": "sub4",
+      "fitness": "green"
+    },
+    {
+      "id": "17",
+      "name": "Josh Taylor",
+      "position": "MID",
+      "pitch_position": "cm1",
+      "fitness": "green"
+    },
+    {
+      "id": "20",
+      "name": "Daniel Gallagher",
+      "position": "DEF",
+      "pitch_position": "dm",
+      "fitness": "green"
+    },
+    {
+      "id": "6",
+      "name": "Niall McManus",
+      "position": "MID",
+      "pitch_position": "sub6",
+      "fitness": "green"
+    },
+    {
+      "id": "16",
+      "name": "Jack Saunders",
+      "position": "MID",
+      "pitch_position": "squad",
+      "fitness": "green"
+    },
+    {
+      "id": "10",
+      "name": "Alfie Rutherford",
+      "position": "FWD",
+      "pitch_position": "st2",
+      "fitness": "green"
+    },
+    {
+      "id": "11",
+      "name": "James McShane",
+      "position": "FWD",
+      "pitch_position": "st1",
+      "fitness": "green"
+    },
+    {
+      "id": "9",
+      "name": "Jason Prior",
+      "position": "FWD",
+      "pitch_position": "sub7",
+      "fitness": "green"
+    },
+    {"id": "31",
+    "name": "Seb-Tauta Caballero",
+    "position": "FWD",
+    "pitch_position": "squad",
+    "fitness": "green"
+    }
+    ,
+    {"id": "32",
+    "name": "Hayden Gale",
+    "position": "DEF",
+    "pitch_position": "squad",
+    "fitness": "green"
+    },
+    {"id": "30",
+    "name": "Josh Hebert",
+    "position": "WIDE",
+    "pitch_position": "squad",
+    "fitness": "green"
+    }
+  ]
+}
