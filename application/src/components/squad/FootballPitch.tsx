@@ -47,9 +47,9 @@ export function FootballPitch({ players, onPlayerDrop, onPlayerRemove }: Footbal
     { id: 'sub2', x: 78, y: 28, label: 'S2' },
     { id: 'sub3', x: 78, y: 40, label: 'S3' },
     { id: 'sub4', x: 78, y: 52, label: 'S4' },
-    { id: 'sub5', x: 78, y: 66, label: 'S5' },
-    { id: 'sub6', x: 78, y: 78, label: 'S6' },
-    { id: 'sub7', x: 78, y: 90, label: 'S7' },
+    { id: 'sub5', x: 78, y: 64, label: 'S5' },
+    { id: 'sub6', x: 78, y: 76, label: 'S6' },
+    { id: 'sub7', x: 78, y: 88, label: 'S7' },
   ]
 
   // Squad players positions - next to subs with horizontal spacing
