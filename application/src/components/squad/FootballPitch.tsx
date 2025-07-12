@@ -28,8 +28,8 @@ export function FootballPitch({ players, onPlayerDrop, onPlayerRemove }: Footbal
     { id: 'cb3', x: 57.5, y: 35, label: 'LCB' },
     
     // Wing Backs
-    { id: 'lm', x: 15, y: 58, label: 'LM' },
-    { id: 'rm', x: 64, y: 58, label: 'RM' },
+    { id: 'rm', x: 15, y: 58, label: 'RM' },
+    { id: 'lm', x: 64, y: 58, label: 'LM' },
     
     // Central Midfield (2)
     { id: 'dm', x: 39.5, y: 42, label: 'DM' },
