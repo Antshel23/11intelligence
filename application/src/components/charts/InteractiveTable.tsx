@@ -89,11 +89,6 @@ export const InteractiveTable: React.FC<InteractiveTableProps> = ({
     })
   }
 
-  const getSortIcon = (key: string) => {
-    if (!sortConfig || sortConfig.key !== key) return '↕️'
-    return sortConfig.direction === 'asc' ? '↑' : '↓'
-  }
-
   // Determine column width based on column type
   const getColumnClasses = (column: Column) => {
     const baseClasses = "text-center text-[10px] font-bold text-white uppercase tracking-wider"
@@ -111,20 +106,17 @@ export const InteractiveTable: React.FC<InteractiveTableProps> = ({
     }
     
     // Compact columns for stats
-    return `px-2 py-3 w-20 max-w-20 ${baseClasses} ${hoverClasses}`
+    return `px-2 py-3 w-20 max-w-12 ${baseClasses} ${hoverClasses}`
   }
 
   const getCellClasses = (column: Column) => {
     if (column.key === 'name') {
-      return "px-4 py-3 text-left min-w-30"
+      return "px-4 py-3 text-left max-w-24"
     }
     if (column.key === 'team') {
-      return "px-3 py-3 text-left min-w-22"
+      return "px-3 py-3 text-left max-w-24"
     }
-    if (column.key === 'position') {
-      return "px-2 py-3 text-center min-w-16"
-    }
-    return "px-2 py-3 w-24 max-w-24 text-center"
+    return "px-2 py-3 w-20 max-w-15 text-center"
   }
 
   const renderCell = (row: TableData, column: Column) => {
@@ -139,7 +131,7 @@ export const InteractiveTable: React.FC<InteractiveTableProps> = ({
         <div 
           className="relative px-3 py-2 rounded-md text-white font-bold text-center min-w-12"
           style={{ 
-            backgroundColor: backgroundColor + '30', // 30% opacity background
+            backgroundColor: backgroundColor + 80, // 30% opacity background
             border: `1px solid ${backgroundColor}60`
           }}
         >
@@ -160,12 +152,6 @@ export const InteractiveTable: React.FC<InteractiveTableProps> = ({
 
   return (
     <div className="w-full">
-      <div className="mb-4">
-        <h3 className="text-lg font-medium text-white/90">{title}</h3>
-        <p className="text-sm text-white/60">
-          Click column headers to sort • {data.length} players • Values show percentile rankings (0-100)
-        </p>
-      </div>
 
       {/* Keep height constraint but hide scrollbars */}
       <div 
@@ -200,14 +186,9 @@ export const InteractiveTable: React.FC<InteractiveTableProps> = ({
                       style={{ borderBottom: `3px solid ${color}` }}
                     >
                       <div className="flex flex-col items-center space-y-1">
-                        <span className="leading-tight break-words hyphens-auto text-center">
+                        <span className="leading-tight break-words hyphens-auto text-center text-[8px]">
                           {column.label}
                         </span>
-                        {column.sortable && (
-                          <span className="text-white/60 text-xs">
-                            {getSortIcon(column.key)}
-                          </span>
-                        )}
                       </div>
                     </th>
                   ))}
