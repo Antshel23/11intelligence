@@ -219,7 +219,7 @@ function OppositionView() {
                 {/* Left Side - Logo and Title */}
                 <div className="flex items-center">
                   <img 
-                    src={`league_logos/${selectedTeam}.png`} 
+                    src={`league_logos/${selectedTeam}.webp`} 
                     alt="Team Logo" 
                     className="h-16 w-16 mr-6"
                   />
@@ -307,7 +307,7 @@ function OppositionView() {
                               <div className="flex items-center justify-center gap-2">
                                 <span>vs {opponentTeam}</span>
                                 <img 
-                                  src={`league_logos/${opponentTeam}.png`} 
+                                  src={`league_logos/${opponentTeam}.webp`} 
                                   alt={`${opponentTeam} logo`}
                                   className="h-4 w-4"
                                 />

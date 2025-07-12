@@ -168,8 +168,8 @@ export function FootballPitch({ players, onPlayerDrop, onPlayerRemove }: Footbal
             alt={player.name}
             className="w-full h-full object-cover rounded-full"
             style={{
-              objectPosition: 'center -60%',
-              transform: 'scale(1.3)'
+              objectPosition: 'center center', // Focuses on the very top
+              transform: 'scale(1.0) translateY(5px)' // Scale + move up slightly
             }}
             loading="lazy"
             decoding="async"

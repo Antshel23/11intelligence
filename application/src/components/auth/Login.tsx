@@ -30,7 +30,7 @@ export function Login({ onLogin }: LoginProps) {
       <div className="bg-[#242B32] p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
         <div className="text-center mb-6">
           <img 
-            src="/league_logos/Dorking Wanderers.png" 
+            src="/league_logos/Dorking Wanderers.webp" 
             alt="Dorking Wanderers FC" 
             className="h-16 w-16 mx-auto mb-4"
           />

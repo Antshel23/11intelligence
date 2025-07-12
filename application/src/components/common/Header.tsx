@@ -28,7 +28,7 @@ export function Header({ selectedTab, onTabChange }: HeaderProps) {
           {/* Left - Dorking Wanderers Logo */}
           <div>
             <img 
-              src="/league_logos/Dorking Wanderers.png" 
+              src="/league_logos/Dorking Wanderers.webp" 
               alt="Dorking Wanderers FC" 
               className="h-12 w-12"
             />

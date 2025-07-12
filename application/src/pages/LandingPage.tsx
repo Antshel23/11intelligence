@@ -64,7 +64,7 @@ function LandingPage() {
   
   // Generate badge path from opposition name
   const getBadgePath = (opposition: string): string => {
-    return `/league_logos/${opposition}.png`
+    return `/league_logos/${opposition}.webp`
   }
   
   // Navigate months
@@ -149,49 +149,48 @@ function LandingPage() {
                             new Date().getMonth() === currentMonth && 
                             new Date().getFullYear() === currentYear
               
-              return (
-                <motion.div
-                  key={`${currentMonth}-${currentYear}-${day}`}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: index * 0.01 }}
-                  className={`border rounded-lg p-2 flex flex-col relative min-h-0 ${
-                    isToday 
-                      ? 'border-yellow-400 bg-yellow-400/10' 
-                      : 'border-white/20 hover:border-white/40'
-                  } ${fixture ? 'bg-[#ffff00]/15' : ''}`}
-                >
-                  {/* Date and Home/Away - Top */}
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-white font-bold text-lg">{day}</span>
-                    {fixture ? (
-                      <div className={`px-1 py-0.5 rounded text-xs font-medium ${
-                        fixture.isHome 
-                          ? 'bg-blue-500 text-white' 
-                          : 'bg-purple-500 text-white'
-                      }`}>
-                        {fixture.isHome ? 'Home' : 'Away'}
-                      </div>
-                    ) : (
-                      <span className="text-white/50 text-xs">{shortMonthNames[currentMonth]}</span>
-                    )}
-                  </div>
-                  
-                  {/* Opposition Badge - Center */}
-                  {fixture && (
-                    <div className="flex-1 flex items-center justify-center">
-                      <img 
-                        src={getBadgePath(fixture.opposition)}
-                        alt={fixture.opposition}
-                        className="w-16 h-16 object-contain"
-                        onError={(e) => {
-                          
-                          e.currentTarget.style.display = 'none'
-                        }}
-                      />
-                    </div>
-                  )}
-                </motion.div>
+                            return (
+                              <motion.div
+                                key={`${currentMonth}-${currentYear}-${day}`}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.3, delay: index * 0.01 }}
+                                className={`border rounded-lg p-2 relative min-h-0 ${
+                                  isToday 
+                                    ? 'border-yellow-400 bg-yellow-400/10' 
+                                    : 'border-white/20 hover:border-white/40'
+                                } ${fixture ? 'bg-[#ffff00]/15' : ''}`}
+                              >
+                                {/* Date - Top Left */}
+                                <span className="absolute top-2 left-2 text-white font-bold text-lg">{day}</span>
+                                
+                                {/* Home/Away - Top Right */}
+                                {fixture ? (
+                                  <div className={`absolute top-2 right-2 px-1 py-0.5 rounded text-xs font-medium ${
+                                    fixture.isHome 
+                                      ? 'bg-blue-500 text-white' 
+                                      : 'bg-purple-500 text-white'
+                                  }`}>
+                                    {fixture.isHome ? 'Home' : 'Away'}
+                                  </div>
+                                ) : (
+                                  <span className="absolute top-2 right-2 text-white/50 text-xs">{shortMonthNames[currentMonth]}</span>
+                                )}
+                                
+                                {/* Opposition Badge - Centered in whole box */}
+                                {fixture && (
+                                  <div className="absolute inset-0 flex items-center justify-center">
+                                    <img 
+                                      src={getBadgePath(fixture.opposition)}
+                                      alt={fixture.opposition}
+                                      className="w-16 h-16 object-contain" // Made slightly bigger since it has more space
+                                      onError={(e) => {
+                                        e.currentTarget.style.display = 'none'
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                              </motion.div>
               )
             })}
           </div>
