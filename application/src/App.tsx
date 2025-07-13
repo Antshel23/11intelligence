@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import { Helmet } from 'react-helmet'
 import { Header } from './components/common/Header'
@@ -125,7 +125,6 @@ function AppContent() {
               </LazyPageWrapper>
             </PageWrapper>
           } />
-          {/* Catch-all route for handling direct URL access */}
           <Route path="*" element={
             <PageWrapper>
               <LazyPageWrapper>
