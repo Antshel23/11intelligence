@@ -1,8 +1,12 @@
 services:
   - type: web
-    name: dwfc-elevenintelligence
     env: static
-    buildCommand: cd application && npm run build
+    buildCommand: |
+      echo "Using render.yaml configuration"
+      cd application
+      npm run build
+      echo "Build complete - checking dist folder:"
+      ls -la dist/
     staticPublishPath: ./application/dist
     routes:
       - type: rewrite
