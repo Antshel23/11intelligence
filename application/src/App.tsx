@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
-import { lazy } from 'react'
-import { Suspense } from 'react'
+import { lazy, Suspense } from 'react'
 import { Helmet } from 'react-helmet'
 import { Header } from './components/common/Header'
 import { Login } from './components/auth/Login'
@@ -90,52 +89,52 @@ function AppContent() {
       </Helmet>
       
       <div className="min-h-screen bg-[#181D21]">
-  <Routes>
-    <Route path="/" element={
-      <PageWrapper>
-        <LazyPageWrapper>
-          <LandingPage />
-        </LazyPageWrapper>
-      </PageWrapper>
-    } />
-    <Route path="/opposition" element={
-      <PageWrapper>
-        <LazyPageWrapper>
-          <OppositionView />
-        </LazyPageWrapper>
-      </PageWrapper>
-    } />
-    <Route path="/player" element={
-      <PageWrapper>
-        <LazyPageWrapper>
-          <PlayerView />
-        </LazyPageWrapper>
-      </PageWrapper>
-    } />
-    <Route path="/progress" element={
-      <PageWrapper>
-        <LazyPageWrapper>
-          <ProgressView />
-        </LazyPageWrapper>
-      </PageWrapper>
-    } />
-    <Route path="/squad" element={
-      <PageWrapper>
-        <LazyPageWrapper>
-          <SquadView />
-        </LazyPageWrapper>
-      </PageWrapper>
-    } />
-    {/* ADD THIS CATCH-ALL ROUTE */}
-    <Route path="*" element={
-      <PageWrapper>
-        <LazyPageWrapper>
-          <LandingPage />
-        </LazyPageWrapper>
-      </PageWrapper>
-    } />
-  </Routes>
-</div>
+        <Routes>
+          <Route path="/" element={
+            <PageWrapper>
+              <LazyPageWrapper>
+                <LandingPage />
+              </LazyPageWrapper>
+            </PageWrapper>
+          } />
+          <Route path="/opposition" element={
+            <PageWrapper>
+              <LazyPageWrapper>
+                <OppositionView />
+              </LazyPageWrapper>
+            </PageWrapper>
+          } />
+          <Route path="/player" element={
+            <PageWrapper>
+              <LazyPageWrapper>
+                <PlayerView />
+              </LazyPageWrapper>
+            </PageWrapper>
+          } />
+          <Route path="/progress" element={
+            <PageWrapper>
+              <LazyPageWrapper>
+                <ProgressView />
+              </LazyPageWrapper>
+            </PageWrapper>
+          } />
+          <Route path="/squad" element={
+            <PageWrapper>
+              <LazyPageWrapper>
+                <SquadView />
+              </LazyPageWrapper>
+            </PageWrapper>
+          } />
+          {/* Catch-all route for handling direct URL access */}
+          <Route path="*" element={
+            <PageWrapper>
+              <LazyPageWrapper>
+                <LandingPage />
+              </LazyPageWrapper>
+            </PageWrapper>
+          } />
+        </Routes>
+      </div>
     </>
   )
 }
