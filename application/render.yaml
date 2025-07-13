@@ -2,8 +2,8 @@ services:
   - type: web
     name: dwfc-elevenintelligence
     env: static
-    buildCommand: npm run build
-    staticPublishPath: ./dist
+    buildCommand: cd application && npm run build
+    staticPublishPath: ./application/dist
     routes:
       - type: rewrite
         source: "/*"
